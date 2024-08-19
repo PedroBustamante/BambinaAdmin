@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Principal - Administração da Escola</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Administração Bambina</h1>
+    </header>
+    
+    <main>
+        <section id="filtros">
+            <h2>Filtros</h2>
+            <div>
+                <label for="aluno-filtro">Filtrar por Aluno:</label>
+                <input type="text" id="aluno-filtro" placeholder="Digite o nome do aluno">
+            </div>
+            <div>
+                <label for="professor-filtro">Filtrar por Professor:</label>
+                <input type="text" id="professor-filtro" placeholder="Digite o nome do professor">
+            </div>
+            <div>
+                <label for="turma-filtro">Filtrar por Turma:</label>
+                <select id="turma-filtro">
+                    <option value="">Todas as Turmas</option>
+                    <option value="PLAY">PLAY</option>
+                    <option value="ACT">ACT</option>
+                    <option value="PERFORM">PERFORM</option>
+                    <option value="DELIGHT">DELIGHT</option>
+                </select>
+            </div>
+        </section>
+        
+        <section id="resultados">
+            <h2>Resultados</h2>
+            <div id="resultados-lista">
+                <!-- Resultados dos filtros aparecerão aqui -->
+            </div>
+        </section>
+    </main>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
