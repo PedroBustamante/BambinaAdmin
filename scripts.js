@@ -77,6 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (alunoNome.includes(alunoFiltroValue) || alunoFiltroValue === '') {
                     resultados.push({
+                        id: aluno.id,
                         tipo: 'Aluno',
                         nome: aluno.nome,
                         detalhes: `Turmas: ${alunoTurmas.join(', ')}`
@@ -112,10 +113,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Exibir resultados
+        console.log({resultados});
         resultadosLista.innerHTML = resultados.length > 0 ? resultados.map(r => `
             <div class="resultado-item">
                 <h3>${r.tipo}: ${r.nome}</h3>
                 <p>${r.detalhes}</p>
+                ${r.tipo === 'Aluno' ? `<button onclick="location.href='aluno.html?id=${r.id}'">Ver Detalhes</button>` : ''}
             </div>
         `).join('') : '<p>Nenhum resultado encontrado.</p>';
     }
