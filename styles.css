@@ -13,6 +13,30 @@ header {
     text-align: center;
 }
 
+nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    background-color: #333;
+    margin: 0;
+}
+
+nav ul li {
+    margin: 0 1rem;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    display: block;
+}
+
+nav ul li a:hover {
+    background-color: #cfead0;
+}
+
 main {
     padding: 2rem;
 }
@@ -21,8 +45,8 @@ main {
     margin-bottom: 2rem;
 }
 
-#filtros div {
-    margin-bottom: 1rem;
+.filtro-grupo {
+    margin-bottom: 2rem;
 }
 
 label {
@@ -47,4 +71,7 @@ input, select {
     padding: 1rem;
     border: 1px solid #ddd;
     border-radius: 4px;
+}
+.hidden {
+    display: none;
 }

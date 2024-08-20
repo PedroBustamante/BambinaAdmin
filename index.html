@@ -3,27 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Principal - Administração da Escola</title>
+    <title>Página Principal - Administração da Bambina</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>Administração Bambina</h1>
+        <h1>Administração da Bambina</h1>
+        <nav>
+            <ul>
+                <li><a href="#" id="menu-alunos">Alunos</a></li>
+                <li><a href="#" id="menu-professores">Professores</a></li>
+                <li><a href="#" id="menu-turmas">Turmas</a></li>
+            </ul>
+        </nav>
     </header>
     
     <main>
         <section id="filtros">
-            <h2>Filtros</h2>
-            <div>
-                <label for="aluno-filtro">Filtrar por Aluno:</label>
+            <div id="filtro-alunos" class="filtro-grupo">
+                <h2>Filtrar por Aluno</h2>
+                <label for="aluno-filtro">Nome do Aluno:</label>
                 <input type="text" id="aluno-filtro" placeholder="Digite o nome do aluno">
             </div>
-            <div>
-                <label for="professor-filtro">Filtrar por Professor:</label>
+            <div id="filtro-professores" class="filtro-grupo" style="display:none;">
+                <h2>Filtrar por Professor</h2>
+                <label for="professor-filtro">Nome do Professor:</label>
                 <input type="text" id="professor-filtro" placeholder="Digite o nome do professor">
             </div>
-            <div>
-                <label for="turma-filtro">Filtrar por Turma:</label>
+            <div id="filtro-turmas" class="filtro-grupo" style="display:none;">
+                <h2>Filtrar por Turma</h2>
+                <label for="turma-filtro">Turma:</label>
                 <select id="turma-filtro">
                     <option value="">Todas as Turmas</option>
                     <option value="PLAY">PLAY</option>
