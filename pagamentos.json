@@ -1,0 +1,32 @@
+{
+    "pagamentos": [
+        {
+            "id": 1,
+            "aluno_id": 1,
+            "data_pagamento": "2024-01-15",
+            "valor": 500.00,
+            "referencia": "Taxa de Matrícula"
+        },
+        {
+            "id": 2,
+            "aluno_id": 1,
+            "data_pagamento": "2024-02-15",
+            "valor": 400.00,
+            "referencia": "Parcela 1"
+        },
+        {
+            "id": 3,
+            "aluno_id": 2,
+            "data_pagamento": "2024-01-20",
+            "valor": 300.00,
+            "referencia": "Taxa de Material"
+        },
+        {
+            "id": 4,
+            "aluno_id": 2,
+            "data_pagamento": "2024-03-10",
+            "valor": 400.00,
+            "referencia": "Parcela 2"
+        }
+    ]
+}

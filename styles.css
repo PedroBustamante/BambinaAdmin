@@ -11,6 +11,18 @@ header {
     color: white;
     padding: 1rem;
     text-align: center;
+    display: flex;
+    flex-direction: column; /* Alinhar os itens verticalmente */
+    align-items: center;
+}
+
+header img#logo {
+    height: 70px; /* Aumentar o tamanho da imagem */
+    margin-bottom: 15px; /* Espaço entre a imagem e o título */
+}
+
+header h1 {
+    margin: 0;
 }
 
 nav ul {
@@ -19,7 +31,8 @@ nav ul {
     display: flex;
     justify-content: center;
     background-color: #333;
-    margin: 0;
+    width: 100%; /* Para que o menu ocupe toda a largura */
+    margin-top: 1rem; /* Espaço entre o título e o menu */
 }
 
 nav ul li {
@@ -34,7 +47,7 @@ nav ul li a {
 }
 
 nav ul li a:hover {
-    background-color: #cfead0;
+    background-color: #4CAF50;
 }
 
 main {
@@ -66,12 +79,53 @@ input, select {
     margin-top: 2rem;
 }
 
-#resultados-lista {
+.resultado-item {
     background-color: #fff;
     padding: 1rem;
     border: 1px solid #ddd;
     border-radius: 4px;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
+
+.resultado-item h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    flex: 1;
+}
+
+.resultado-item p {
+    margin: 0.5rem 0;
+    flex: 2;
+}
+
+.resultado-item button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.resultado-item button:hover {
+    background-color: #45a049;
+}
+
 .hidden {
     display: none;
+}
+
+.overview-content, .dados-content, .pagamentos-content {
+    margin-top: 1rem;
+}
+
+.pagamento-item {
+    background-color: #fff;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 1rem;
 }

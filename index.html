@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Principal - Administração da Bambina</title>
+    <title>Página Principal - Administração da Escola</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>Administração da Bambina</h1>
+        <img src="bambinaLogo.png" alt="Logo Bambina" id="logo">
+        <h1>Admin</h1>
         <nav>
             <ul>
                 <li><a href="#" id="menu-alunos">Alunos</a></li>
@@ -20,7 +21,7 @@
     
     <main>
         <section id="filtros">
-            <div id="filtro-alunos" class="filtro-grupo">
+            <div id="filtro-alunos" class="filtro-grupo" style="display:none;">
                 <h2>Filtrar por Aluno</h2>
                 <label for="aluno-filtro">Nome do Aluno:</label>
                 <input type="text" id="aluno-filtro" placeholder="Digite o nome do aluno">
@@ -43,7 +44,7 @@
             </div>
         </section>
         
-        <section id="resultados">
+        <section id="resultados" >
             <h2>Resultados</h2>
             <div id="resultados-lista">
                 <!-- Resultados dos filtros aparecerão aqui -->
