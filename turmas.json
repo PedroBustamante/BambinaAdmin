@@ -27,6 +27,13 @@
         "horario": "Sábado 16:00-18:00",
         "professor_responsavel_id": 5,
         "aide_id": 1
+      },
+      {
+        "id": 5,
+        "nome": "ACT",
+        "horario": "Sábado 10:00-12:00",
+        "professor_responsavel_id": 5,
+        "aide_id": 1
       }
     ]
   }

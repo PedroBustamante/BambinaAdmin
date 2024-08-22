@@ -12,7 +12,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const filtroProfessores = document.getElementById('filtro-professores');
     const filtroTurmas = document.getElementById('filtro-turmas');
 
-    const mainContent = document.querySelector('main'); // Seleciona o conteúdo principal
+    const mainContent = document.querySelector('main');
+    const btnAdd = document.getElementById('btn-add'); // Seleciona o botão de adicionar
 
     // Carregar dados dos JSONs
     let alunos = [];
@@ -35,16 +36,31 @@ document.addEventListener('DOMContentLoaded', function() {
     menuAlunos.addEventListener('click', function() {
         mostrarConteudo(); // Exibir o conteúdo
         selecionarFiltro('alunos');
+        btnAdd.textContent = 'Adicionar Aluno';
+        btnAdd.classList.remove('hidden');
+        btnAdd.onclick = function() {
+            window.location.href = 'adicionarAluno.html';
+        };
     });
 
     menuProfessores.addEventListener('click', function() {
         mostrarConteudo(); // Exibir o conteúdo
         selecionarFiltro('professores');
+        btnAdd.textContent = 'Adicionar Professor';
+        btnAdd.classList.remove('hidden');
+        btnAdd.onclick = function() {
+            window.location.href = 'adicionarProfessor.html';
+        };
     });
 
     menuTurmas.addEventListener('click', function() {
         mostrarConteudo(); // Exibir o conteúdo
         selecionarFiltro('turmas');
+        btnAdd.textContent = 'Adicionar Turma';
+        btnAdd.classList.remove('hidden');
+        btnAdd.onclick = function() {
+            window.location.href = 'adicionarTurma.html';
+        };
     });
 
     // Função para selecionar e exibir o filtro correto
@@ -70,7 +86,6 @@ document.addEventListener('DOMContentLoaded', function() {
         let resultados = [];
 
         if (filtroAlunos.style.display === 'block') {
-            // Filtrar alunos
             alunos.forEach(aluno => {
                 const alunoNome = aluno.nome.toLowerCase();
                 const alunoTurmas = aluno.ids_turmas.map(id => turmas.find(turma => turma.id === id).nome);
@@ -85,7 +100,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         } else if (filtroProfessores.style.display === 'block') {
-            // Filtrar professores
             professores.forEach(professor => {
                 const professorNome = professor.nome_completo.toLowerCase();
 
@@ -98,7 +112,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         } else if (filtroTurmas.style.display === 'block') {
-            // Filtrar turmas
             turmas.forEach(turma => {
                 if (!turmaFiltroValue || turma.nome === turmaFiltroValue) {
                     const professorResponsavel = professores.find(prof => prof.id === turma.professor_responsavel_id);
@@ -113,7 +126,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Exibir resultados
-        console.log({resultados});
         resultadosLista.innerHTML = resultados.length > 0 ? resultados.map(r => `
             <div class="resultado-item">
                 <h3>${r.tipo}: ${r.nome}</h3>

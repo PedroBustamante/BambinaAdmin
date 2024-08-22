@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Aluno</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Adicionar Novo Aluno</h1>
+    </header>
+    
+    <main>
+        <form id="form-adicionar-aluno">
+            <label for="nome">Nome do Aluno:</label>
+            <input type="text" id="nome" name="nome" required>
+
+            <label for="turmas">Turma:</label>
+            <select id="turmas" name="turmas" required>
+                <option value="">Selecione uma turma</option>
+                <!-- As opções de turmas serão carregadas aqui via JavaScript -->
+            </select>
+            
+            
+            <label for="responsavel">Responsável:</label>
+            <input type="text" id="responsavel" name="responsavel" required>
+            
+            <label for="telefone">Telefone:</label>
+            <input type="tel" id="telefone" name="telefone" required>
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email">
+            
+            <label for="data_nascimento">Data de Nascimento:</label>
+            <input type="date" id="data_nascimento" name="data_nascimento" required>
+            
+            <label for="pais_nascimento">País de Nascimento:</label>
+            <input type="text" id="pais_nascimento" name="pais_nascimento">
+            
+            <label for="escola_profissao">Escola/Profissão:</label>
+            <input type="text" id="escola_profissao" name="escola_profissao">
+            
+            <label for="cep">CEP:</label>
+            <input type="text" id="cep" name="cep">
+            
+            <label for="endereco">Endereço:</label>
+            <input type="text" id="endereco" name="endereco">
+            
+            <label for="contato_emergencia">Contato de Emergência:</label>
+            <input type="text" id="contato_emergencia" name="contato_emergencia">
+            
+            <label for="convenio_saude">Convênio de Saúde:</label>
+            <input type="text" id="convenio_saude" name="convenio_saude">
+            
+            <label for="doencas_necessidades_especiais">Doenças e Necessidades Especiais:</label>
+            <input type="text" id="doencas_necessidades_especiais" name="doencas_necessidades_especiais">
+            
+            <label for="alergias">Alergias:</label>
+            <input type="text" id="alergias" name="alergias">
+            
+            <label for="forma_pagamento">Forma de Pagamento:</label>
+            <input type="text" id="forma_pagamento" name="forma_pagamento">
+            
+            <label for="data_ingresso">Data de Ingresso:</label>
+            <input type="date" id="data_ingresso" name="data_ingresso" required>
+            
+            <label for="data_saida">Data de Saída:</label>
+            <input type="date" id="data_saida" name="data_saida">
+            
+            <label for="uso_imagem">Permite Uso de Imagem:</label>
+            <input type="checkbox" id="uso_imagem" name="uso_imagem">
+            
+            <label for="experimental">Período Experimental:</label>
+            <input type="checkbox" id="experimental" name="experimental">
+
+            <button type="submit">Adicionar Aluno</button>
+        </form>
+    </main>
+
+    <script src="adicionarAluno.js"></script>
+</body>
+</html>

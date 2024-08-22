@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Professor</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Adicionar Novo Professor</h1>
+    </header>
+    
+    <main>
+        <form id="form-adicionar-professor">
+            <label for="nome_completo">Nome Completo:</label>
+            <input type="text" id="nome_completo" name="nome_completo" required>
+            
+            <label for="data_nascimento">Data de Nascimento:</label>
+            <input type="date" id="data_nascimento" name="data_nascimento" required>
+            
+            <label for="data_entrada">Data de Entrada na Escola:</label>
+            <input type="date" id="data_entrada" name="data_entrada" required>
+            
+            <label for="telefone">Telefone:</label>
+            <input type="tel" id="telefone" name="telefone" required>
+
+            <label for="chaves">Chaves (selecione as que o professor possui):</label>
+            <div id="chaves" class="select-multiple">
+                <div class="option" data-value="Controle portão">Controle portão</div>
+                <div class="option" data-value="Porta metal principal">Porta metal principal</div>
+                <div class="option" data-value="Porta metal upstairs">Porta metal upstairs</div>
+                <div class="option" data-value="Porta de vidro">Porta de vidro</div>
+            </div>
+            
+            <button type="submit">Adicionar Professor</button>
+        </form>
+    </main>
+
+    <script src="adicionarProfessor.js"></script>
+</body>
+</html>

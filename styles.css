@@ -129,3 +129,62 @@ input, select {
     border-radius: 4px;
     margin-bottom: 1rem;
 }
+
+#btn-add {
+    position: absolute;
+    top: 1.5rem;
+    right: 2rem;
+    padding: 0.5rem 1rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#btn-add.hidden {
+    display: none;
+}
+
+#btn-add:hover {
+    background-color: #45a049;
+}
+
+.select-multiple {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.select-multiple .option {
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.select-multiple .option.selected {
+    background-color: #22e129;
+    color: white;
+    border-color: #22e129;
+}
+
+.select-multiple .option:hover {
+    border-color: #22e129;
+}
+
+button[type="submit"] {
+    margin-top: 20px; /* Adiciona espaço entre o botão e o elemento acima */
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px; 
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover {
+    background-color: #45a049;
+}

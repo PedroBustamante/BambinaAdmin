@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Turma</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Adicionar Nova Turma</h1>
+    </header>
+    
+    <main>
+        <form id="form-adicionar-turma">
+            <label for="nome">Nome da Turma:</label>
+            <input type="text" id="nome" name="nome" required>
+            
+            <label for="horario">Horário:</label>
+            <input type="text" id="horario" name="horario" placeholder="e.g., Segunda 14:00-16:00" required>
+            
+            <label for="professor_responsavel">Professor Responsável:</label>
+            <select id="professor_responsavel" name="professor_responsavel" required>
+                <!-- As opções de professores serão carregadas aqui via JavaScript -->
+            </select>
+            
+            <label for="aide">Professor Ajudante (opcional):</label>
+            <select id="aide" name="aide">
+                <option value="">Nenhum</option>
+                <!-- As opções de professores serão carregadas aqui via JavaScript -->
+            </select>
+            
+            <button type="submit">Adicionar Turma</button>
+        </form>
+    </main>
+
+    <script src="adicionarTurma.js"></script>
+</body>
+</html>
