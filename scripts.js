@@ -20,9 +20,9 @@ document.addEventListener('DOMContentLoaded', function() {
      let turmas = [];
 
      // URLs dos endpoints
-     const alunosUrl = `${window.config.apiUrl}/alunos`;
-     const professoresUrl = `${window.config.apiUrl}/professores`;
-     const turmasUrl = `${window.config.apiUrl}/turmas`;
+     const alunosUrl = `https://bambina-admin-back.vercel.app/alunos`;
+     const professoresUrl = `https://bambina-admin-back.vercel.app/professores`;
+     const turmasUrl = `https://bambina-admin-back.vercel.app/turmas`;
 
      // Funções para carregar os dados das APIs
      async function carregarAlunos() {
@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
          try {
              const response = await fetch(turmasUrl);
              const data = await response.json();
+             console.log({data});
              turmas = data;
          } catch (error) {
              console.error('Erro ao carregar turmas:', error);
@@ -65,6 +66,8 @@ document.addEventListener('DOMContentLoaded', function() {
          .catch(error => {
              console.error('Erro ao carregar os dados:', error);
          });
+
+    console.log({turmas})
  
     // Alternar filtros ao clicar no menu
     menuAlunos.addEventListener('click', function() {
