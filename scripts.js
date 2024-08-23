@@ -14,24 +14,58 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const mainContent = document.querySelector('main');
     const btnAdd = document.getElementById('btn-add'); // Seleciona o botão de adicionar
+     // Variáveis para armazenar os dados
+     let alunos = [];
+     let professores = [];
+     let turmas = [];
 
-    // Carregar dados dos JSONs
-    let alunos = [];
-    let professores = [];
-    let turmas = [];
+     // URLs dos endpoints
+     const alunosUrl = `${window.config.apiUrl}/alunos`;
+     const professoresUrl = `${window.config.apiUrl}/professores`;
+     const turmasUrl = `${window.config.apiUrl}/turmas`;
 
-    fetch('alunos.json')
-        .then(response => response.json())
-        .then(data => alunos = data.alunos);
-
-    fetch('professores.json')
-        .then(response => response.json())
-        .then(data => professores = data.professores);
-
-    fetch('turmas.json')
-        .then(response => response.json())
-        .then(data => turmas = data.turmas);
-
+     // Funções para carregar os dados das APIs
+     async function carregarAlunos() {
+         try {
+             const response = await fetch(alunosUrl);
+             const data = await response.json();
+             alunos = data;
+         } catch (error) {
+             console.error('Erro ao carregar alunos:', error);
+         }
+     }
+ 
+     async function carregarProfessores() {
+         try {
+             const response = await fetch(professoresUrl);
+             const data = await response.json();
+             professores = data;
+         } catch (error) {
+             console.error('Erro ao carregar professores:', error);
+         }
+     }
+ 
+     async function carregarTurmas() {
+         try {
+             const response = await fetch(turmasUrl);
+             const data = await response.json();
+             turmas = data;
+         } catch (error) {
+             console.error('Erro ao carregar turmas:', error);
+         }
+     }
+ 
+     // Carregar todos os dados
+     Promise.all([carregarAlunos(), carregarProfessores(), carregarTurmas()])
+         .then(() => {
+             // Aqui você pode chamar a função para exibir ou manipular os dados carregados
+             console.log('Dados carregados:', { alunos, professores, turmas });
+             // Função para exibir ou manipular os dados
+         })
+         .catch(error => {
+             console.error('Erro ao carregar os dados:', error);
+         });
+ 
     // Alternar filtros ao clicar no menu
     menuAlunos.addEventListener('click', function() {
         mostrarConteudo(); // Exibir o conteúdo
