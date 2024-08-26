@@ -49,7 +49,6 @@ document.addEventListener('DOMContentLoaded', function() {
          try {
              const response = await fetch(turmasUrl);
              const data = await response.json();
-             console.log({data});
              turmas = data;
          } catch (error) {
              console.error('Erro ao carregar turmas:', error);
@@ -58,16 +57,14 @@ document.addEventListener('DOMContentLoaded', function() {
  
      // Carregar todos os dados
      Promise.all([carregarAlunos(), carregarProfessores(), carregarTurmas()])
-         .then(() => {
-             // Aqui você pode chamar a função para exibir ou manipular os dados carregados
-             console.log('Dados carregados:', { alunos, professores, turmas });
-             // Função para exibir ou manipular os dados
-         })
+        //  .then(() => {
+        //      // Aqui você pode chamar a função para exibir ou manipular os dados carregados
+        //      // Função para exibir ou manipular os dados
+        //  })
          .catch(error => {
              console.error('Erro ao carregar os dados:', error);
          });
 
-    console.log({turmas})
  
     // Alternar filtros ao clicar no menu
     menuAlunos.addEventListener('click', function() {

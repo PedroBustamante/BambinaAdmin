@@ -7,9 +7,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const urlParams = new URLSearchParams(window.location.search);
     const alunoId = urlParams.get('id');
 
+    let alunoSelecionado = null;
     let alunos = [];
     let turmas = [];
     let pagamentos = [];
+    const alunosUrl = `https://bambina-admin-back.vercel.app/alunos`;
+    const turmasUrl = `https://bambina-admin-back.vercel.app/turmas`;
 
     function calcularIdade(dataNascimento) {
         const hoje = new Date();
@@ -126,15 +129,18 @@ document.addEventListener('DOMContentLoaded', function() {
         
             // Carregar os dados e exibir o formulário de edição
             Promise.all([
-                fetch('alunos.json').then(response => response.json()).then(data => alunos = data.alunos),
-                fetch('turmas.json').then(response => response.json()).then(data => turmas = data.turmas)
+                fetch(alunosUrl).then(response => response.json()).then(data => alunos = data),
+                fetch(turmasUrl).then(response => response.json()).then(data => turmas = data)
             ]).then(() => {
-                const aluno = alunos.find(a => a.id == alunoId);
-                if (aluno) {
-                    exibirFormularioEdicao(aluno);
+                alunoSelecionado = alunos.find(a => a.id == alunoId);
+                if (alunoSelecionado) {
+                    exibirOverview(alunoSelecionado);
                 } else {
                     detalhesAluno.innerHTML = '<p>Aluno não encontrado.</p>';
                 }
+            }).catch(error => {
+                console.error('Erro ao carregar os dados:', error);
+                detalhesAluno.innerHTML = '<p>Erro ao carregar os dados.</p>';
             });
 
     function exibirPagamentos(alunoId) {
@@ -171,8 +177,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     Promise.all([
-        fetch('alunos.json').then(response => response.json()).then(data => alunos = data.alunos),
-        fetch('turmas.json').then(response => response.json()).then(data => turmas = data.turmas),
+        fetch(alunosUrl).then(response => response.json()).then(data => alunos = data),
+        fetch(turmasUrl).then(response => response.json()).then(data => turmas = data),
         fetch('pagamentos.json').then(response => response.json()).then(data => pagamentos = data.pagamentos)
     ]).then(() => {
         alunoSelecionado = alunos.find(a => a.id == alunoId);
