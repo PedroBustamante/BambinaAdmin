@@ -21,8 +21,27 @@ document.addEventListener('DOMContentLoaded', function() {
             chaves: chavesSelecionadas
         };
 
-        console.log('Novo Professor Adicionado:', novoProfessor);
-
-        alert('Professor adicionado com sucesso!');
+        fetch('http://bambina-admin-back.vercel.app/professores/adicionar-professor', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(novoProfessor)
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(errorData => {
+                    throw new Error(errorData.error || 'Erro ao adicionar professor');
+                });
+            }
+            return response.json();
+        })
+        .then(_ => {
+            alert('Professor adicionado com sucesso!');
+        })
+        .catch(error => {
+            console.error('Erro ao adicionar professor:', error);
+            alert('Erro ao adicionar professor. Tente novamente mais tarde.');
+        });
     });
 });

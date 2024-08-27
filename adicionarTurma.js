@@ -1,13 +1,13 @@
 document.addEventListener('DOMContentLoaded', function() {
     const professorResponsavelSelect = document.getElementById('professor_responsavel');
     const aideSelect = document.getElementById('aide');
+    const professoresUrl = `https://bambina-admin-back.vercel.app/professores`;
 
     // Carregar a lista de professores
-    fetch('professores.json')
+    fetch(professoresUrl)
         .then(response => response.json())
         .then(data => {
-            const professores = data.professores;
-            professores.forEach(professor => {
+            data.forEach(professor => {
                 const option = document.createElement('option');
                 option.value = professor.id;
                 option.textContent = professor.nome_completo;
@@ -27,10 +27,30 @@ document.addEventListener('DOMContentLoaded', function() {
             professor_responsavel_id: parseInt(document.getElementById('professor_responsavel').value),
             aide_id: document.getElementById('aide').value ? parseInt(document.getElementById('aide').value) : null
         };
+        
 
-        console.log('Nova Turma Adicionada:', novaTurma);
-
-        // Aqui, você pode enviar os dados para um servidor ou salvá-los localmente
-        alert('Turma adicionada com sucesso!');
+        fetch('https://bambina-admin-back.vercel.app/turmas/adicionar-turma', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(novaTurma)
+        })
+        .then(response => {
+            console.log({response});
+            if (!response.ok) {
+                return response.json().then(errorData => {
+                    throw new Error(errorData.error || 'Erro ao adicionar turma');
+                });
+            }
+            return response.json();
+        })
+        .then(_ => {
+            alert('Turma adicionada com sucesso!');
+        })
+        .catch(error => {
+            console.log({error});
+            alert('Erro ao adicionar turma. Tente novamente mais tarde.');
+        });
     });
 });
