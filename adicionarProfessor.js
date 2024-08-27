@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
             chaves: chavesSelecionadas
         };
 
-        fetch('http://bambina-admin-back.vercel.app/professores/adicionar-professor', {
+        fetch('https://bambina-admin-back.vercel.app/professores/adicionar-professor', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

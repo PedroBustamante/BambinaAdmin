@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
 
         // Enviar dados para o servidor
-        fetch('http://bambina-admin-back.vercel.app/alunos/adicionar-aluno', {
+        fetch('https://bambina-admin-back.vercel.app/alunos/adicionar-aluno', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
