@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const professorFiltro = document.getElementById('professor-filtro');
     const turmaFiltro = document.getElementById('turma-filtro');
     const resultadosLista = document.getElementById('resultados-lista');
+    const loadingSpinner = document.getElementById('loading-spinner'); // Seleciona o spinner
 
     const menuAlunos = document.getElementById('menu-alunos');
     const menuProfessores = document.getElementById('menu-professores');
@@ -14,58 +15,77 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const mainContent = document.querySelector('main');
     const btnAdd = document.getElementById('btn-add'); // Seleciona o botão de adicionar
-     // Variáveis para armazenar os dados
-     let alunos = [];
-     let professores = [];
-     let turmas = [];
 
-     // URLs dos endpoints
-     const alunosUrl = `https://bambina-admin-back.vercel.app/alunos`;
-     const professoresUrl = `https://bambina-admin-back.vercel.app/professores`;
-     const turmasUrl = `https://bambina-admin-back.vercel.app/turmas`;
+    // Variáveis para armazenar os dados
+    let alunos = [];
+    let professores = [];
+    let turmas = [];
 
-     // Funções para carregar os dados das APIs
-     async function carregarAlunos() {
-         try {
-             const response = await fetch(alunosUrl);
-             const data = await response.json();
-             alunos = data;
-         } catch (error) {
-             console.error('Erro ao carregar alunos:', error);
-         }
-     }
- 
-     async function carregarProfessores() {
-         try {
-             const response = await fetch(professoresUrl);
-             const data = await response.json();
-             professores = data;
-         } catch (error) {
-             console.error('Erro ao carregar professores:', error);
-         }
-     }
- 
-     async function carregarTurmas() {
-         try {
-             const response = await fetch(turmasUrl);
-             const data = await response.json();
-             turmas = data;
-         } catch (error) {
-             console.error('Erro ao carregar turmas:', error);
-         }
-     }
- 
-     // Carregar todos os dados
-     Promise.all([carregarAlunos(), carregarProfessores(), carregarTurmas()])
-        //  .then(() => {
-        //      // Aqui você pode chamar a função para exibir ou manipular os dados carregados
-        //      // Função para exibir ou manipular os dados
-        //  })
-         .catch(error => {
-             console.error('Erro ao carregar os dados:', error);
-         });
+    // URLs dos endpoints
+    const alunosUrl = `https://bambina-admin-back.vercel.app/alunos`;
+    const professoresUrl = `https://bambina-admin-back.vercel.app/professores`;
+    const turmasUrl = `https://bambina-admin-back.vercel.app/turmas`;
 
- 
+    // Função para mostrar o spinner
+    function mostrarSpinner() {
+        loadingSpinner.classList.remove('hidden');
+    }
+
+    // Função para esconder o spinner
+    function esconderSpinner() {
+        loadingSpinner.classList.add('hidden');
+    }
+
+    // Funções para carregar os dados das APIs
+    async function carregarAlunos() {
+        try {
+            const response = await fetch(alunosUrl);
+            const data = await response.json();
+            alunos = data;
+        } catch (error) {
+            console.error('Erro ao carregar alunos:', error);
+        }
+    }
+
+    async function carregarProfessores() {
+        try {
+            const response = await fetch(professoresUrl);
+            const data = await response.json();
+            professores = data;
+        } catch (error) {
+            console.error('Erro ao carregar professores:', error);
+        }
+    }
+
+    async function carregarTurmas() {
+        try {
+            const response = await fetch(turmasUrl);
+            const data = await response.json();
+            turmas = data;
+        } catch (error) {
+            console.error('Erro ao carregar turmas:', error);
+        }
+    }
+
+    // Função para recarregar os dados sempre que a página for mostrada
+    function recarregarDados() {
+        mostrarSpinner(); // Mostrar o spinner antes de carregar os dados
+        Promise.all([carregarAlunos(), carregarProfessores(), carregarTurmas()])
+            .then(() => {
+                esconderSpinner(); // Esconder o spinner após carregar os dados
+                filtrarResultados(); // Atualizar os resultados com os dados recarregados
+            })
+            .catch(error => {
+                esconderSpinner(); // Esconder o spinner em caso de erro
+                console.error('Erro ao recarregar os dados:', error);
+            });
+    }
+
+    // Chamar recarregarDados quando a página for mostrada novamente
+    window.addEventListener('pageshow', function(event) {      
+        recarregarDados();
+    });
+
     // Alternar filtros ao clicar no menu
     menuAlunos.addEventListener('click', function() {
         mostrarConteudo(); // Exibir o conteúdo
