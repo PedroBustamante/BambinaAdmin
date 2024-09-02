@@ -7,11 +7,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const urlParams = new URLSearchParams(window.location.search);
     const alunoId = urlParams.get('id');
 
-    let alunoSelecionado = null;
-    let alunos = [];
     let turmas = [];
     let pagamentos = [];
-    const alunosUrl = `https://bambina-admin-back.vercel.app/alunos`;
+    let alunoEspecifico = null;
+    const alunoEspecificoUrl =  `https://bambina-admin-back.vercel.app/alunos/aluno/${alunoId}`;
     const turmasUrl = `https://bambina-admin-back.vercel.app/turmas`;
 
     function calcularIdade(dataNascimento) {
@@ -48,35 +47,43 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function exibirDados(aluno) {
-                const turmasDoAluno = aluno.ids_turmas.map(id => {
-                    const turma = turmas.find(turma => turma.id === id);
-                    return `${turma.nome} (${turma.horario})`;
-                }).join(', ');
-        
-                detalhesAluno.innerHTML = `
-                    <form id="form-editar-aluno">
-                        <label for="nome">Nome:</label>
-                        <input type="text" id="nome" name="nome" value="${aluno.nome}" disabled>
-                        
-                        <label for="responsavel">Responsável:</label>
-                        <input type="text" id="responsavel" name="responsavel" value="${aluno.responsavel}" disabled>
-                        
-                        <label for="turmas">Turmas:</label>
-                        <input type="text" id="turmas" name="turmas" value="${turmasDoAluno}" disabled>
-                        
-                        <label for="telefone">Telefone:</label>
-                        <input type="text" id="telefone" name="telefone" value="${aluno.telefone}" disabled>
-                        
-                        <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" value="${aluno.email}" disabled>
-                        
-                        <label for="data_nascimento">Data de Nascimento:</label>
-                        <input type="date" id="data_nascimento" name="data_nascimento" value="${aluno.data_nascimento}" disabled>
-                        
-                        <label for="pais_nascimento">País de Nascimento:</label>
-                        <input type="text" id="pais_nascimento" name="pais_nascimento" value="${aluno.pais_nascimento}" disabled>
-                        
-                        <label for="escola_profissao">Escola/Profissão:</label>
+        const turmasDoAluno = aluno.ids_turmas.map(id => {
+            const turma = turmas.find(turma => turma.id === id);
+            return turma ? turma.id : ''; // Seleciona o ID da turma para usar no dropdown
+        });
+    
+        // Gerar as opções do dropdown com todas as turmas disponíveis
+        const turmasOptions = turmas.map(turma => {
+            const selected = turmasDoAluno.includes(turma.id) ? 'selected' : ''; // Marca como selecionada se o aluno estiver nessa turma
+            return `<option value="${turma.id}" ${selected}>${turma.nome} (${turma.horario})</option>`;
+        }).join('');
+    
+        detalhesAluno.innerHTML = `
+            <form id="form-editar-aluno">
+                <label for="nome">Nome:</label>
+                <input type="text" id="nome" name="nome" value="${aluno.nome}" disabled>
+                
+                <label for="responsavel">Responsável:</label>
+                <input type="text" id="responsavel" name="responsavel" value="${aluno.responsavel}" disabled>
+                
+                <label for="turmas">Turmas:</label>
+                <select id="turmas" name="turmas" disabled>
+                    ${turmasOptions}
+                </select>
+                
+                <label for="telefone">Telefone:</label>
+                <input type="text" id="telefone" name="telefone" value="${aluno.telefone}" disabled>
+                
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="${aluno.email}" disabled>
+                
+                <label for="data_nascimento">Data de Nascimento:</label>
+                <input type="date" id="data_nascimento" name="data_nascimento" value="${aluno.data_nascimento}" disabled>
+                
+                <label for="pais_nascimento">País de Nascimento:</label>
+                <input type="text" id="pais_nascimento" name="pais_nascimento" value="${aluno.pais_nascimento}" disabled>
+                
+                <label for="escola_profissao">Escola/Profissão:</label>
                         <input type="text" id="escola_profissao" name="escola_profissao" value="${aluno.escola_profissao}" disabled>
                         
                         <label for="cep">CEP:</label>
@@ -111,37 +118,90 @@ document.addEventListener('DOMContentLoaded', function() {
                         
                         <label for="experimental">Período Experimental:</label>
                         <input type="checkbox" id="experimental" name="experimental" ${aluno.experimental ? 'checked' : ''} disabled>
-                        
-                        <button type="button" id="editar-dados">Editar Dados</button>
-                        <button type="submit" id="salvar-dados" disabled>Salvar Alterações</button>
-                    </form>
-                `;
-        
-                // Adicionar funcionalidade ao botão "Editar Dados"
-                const editarButton = document.getElementById('editar-dados');
-                const salvarButton = document.getElementById('salvar-dados');
-                editarButton.addEventListener('click', function() {
-                    const inputs = document.querySelectorAll('#form-editar-aluno input');
-                    inputs.forEach(input => input.disabled = false);
-                    salvarButton.disabled = false;
-                });
-            }
-        
-            // Carregar os dados e exibir o formulário de edição
-            Promise.all([
-                fetch(alunosUrl).then(response => response.json()).then(data => alunos = data),
-                fetch(turmasUrl).then(response => response.json()).then(data => turmas = data)
-            ]).then(() => {
-                alunoSelecionado = alunos.find(a => a.id == alunoId);
-                if (alunoSelecionado) {
-                    exibirOverview(alunoSelecionado);
-                } else {
-                    detalhesAluno.innerHTML = '<p>Aluno não encontrado.</p>';
+                
+                <button type="button" id="editar-dados">Editar Dados</button>
+                <button type="button" id="cancelar-edicao" class="hidden">Cancelar Edição</button>
+                <button type="submit" id="salvar-dados" disabled>Salvar Alterações</button>
+            </form>
+        `;
+    
+        const editarButton = document.getElementById('editar-dados');
+        const salvarButton = document.getElementById('salvar-dados');
+        const cancelarButton = document.getElementById('cancelar-edicao');
+    
+        // Habilitar edição ao clicar no botão "Editar Dados"
+        editarButton.addEventListener('click', function() {
+            const inputs = document.querySelectorAll('#form-editar-aluno input, #form-editar-aluno select');
+            inputs.forEach(input => input.disabled = false);
+            salvarButton.disabled = false;
+            cancelarButton.classList.remove('hidden');
+            editarButton.disabled = true; // Desabilita o botão de edição enquanto a edição está ativa
+        });
+    
+        // Cancelar edição e restaurar os valores originais
+        cancelarButton.addEventListener('click', function() {
+            exibirDados(alunoEspecifico); // Restaura os dados originais
+            cancelarButton.classList.add('hidden'); // Esconde o botão "Cancelar Edição"
+            editarButton.disabled = false; // Reabilita o botão de edição
+        });
+    
+        // Enviar os dados editados para o servidor ao clicar em "Salvar Alterações"
+        document.getElementById('form-editar-aluno').addEventListener('submit', function(event) {
+            event.preventDefault();
+    
+            const dadosEditados = {
+                nome: document.getElementById('nome').value,
+                responsavel: document.getElementById('responsavel').value,
+                telefone: document.getElementById('telefone').value,
+                email: document.getElementById('email').value,
+                data_nascimento: document.getElementById('data_nascimento').value,
+                pais_nascimento: document.getElementById('pais_nascimento').value,
+                escola_profissao: document.getElementById('escola_profissao').value,
+                cep: document.getElementById('cep').value,
+                endereco: document.getElementById('endereco').value,
+                contato_emergencia: document.getElementById('contato_emergencia').value,
+                convenio_saude: document.getElementById('convenio_saude').value,
+                doencas_necessidades_especiais: document.getElementById('doencas_necessidades_especiais').value,
+                alergias: document.getElementById('alergias').value,
+                forma_pagamento: document.getElementById('forma_pagamento').value,
+                data_ingresso: document.getElementById('data_ingresso').value,
+                data_saida: document.getElementById('data_saida').value || null,
+                uso_imagem: document.getElementById('uso_imagem').checked,
+                experimental: document.getElementById('experimental').checked,
+                ids_turmas: Array.from(document.getElementById('turmas').selectedOptions).map(option => parseInt(option.value)) // Obtém os IDs das turmas selecionadas
+            };
+
+            console.log(JSON.stringify(dadosEditados));
+    
+            fetch(`https://bambina-admin-back.vercel.app/alunos/editar-aluno/${alunoId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dadosEditados)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao salvar os dados.');
                 }
-            }).catch(error => {
-                console.error('Erro ao carregar os dados:', error);
-                detalhesAluno.innerHTML = '<p>Erro ao carregar os dados.</p>';
+                return response.json();
+            })
+            .then(data => {
+                alert('Dados salvos com sucesso!');
+                fetch(alunoEspecificoUrl).then(response => response.json()).then(data =>    {
+                    alunoEspecifico = data;
+                    selecionarAba('dados');
+                });
+                // selecionarAba('dados'); // Volta para a aba de dados com os valores atualizados
+            })
+            .catch(error => {
+                console.error('Erro ao salvar os dados:', error);
+                alert('Erro ao salvar os dados. Tente novamente mais tarde.');
             });
+        });
+    }
+    
+
 
     function exibirPagamentos(alunoId) {
         const pagamentosDoAluno = pagamentos.filter(p => p.aluno_id == alunoId);
@@ -166,23 +226,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (aba === 'overview') {
             menuOverview.classList.add('active');
-            exibirOverview(alunoSelecionado);
+            exibirOverview(alunoEspecifico);
         } else if (aba === 'dados') {
             menuDados.classList.add('active');
-            exibirDados(alunoSelecionado);
+            exibirDados(alunoEspecifico);
         } else if (aba === 'pagamentos') {
             menuPagamentos.classList.add('active');
-            exibirPagamentos(alunoSelecionado.id);
+            exibirPagamentos(alunoId);
         }
     }
 
     Promise.all([
-        fetch(alunosUrl).then(response => response.json()).then(data => alunos = data),
+        fetch(alunoEspecificoUrl).then(response => response.json()).then(data => alunoEspecifico = data),
         fetch(turmasUrl).then(response => response.json()).then(data => turmas = data),
         fetch('pagamentos.json').then(response => response.json()).then(data => pagamentos = data.pagamentos)
     ]).then(() => {
-        alunoSelecionado = alunos.find(a => a.id == alunoId);
-        if (alunoSelecionado) {
+        if (alunoEspecifico) {
             selecionarAba('overview'); // Exibe o overview por padrão
         } else {
             detalhesAluno.innerHTML = '<p>Aluno não encontrado.</p>';

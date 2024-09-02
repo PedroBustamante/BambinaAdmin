@@ -189,6 +189,10 @@ button[type="submit"]:hover {
     background-color: #45a049;
 }
 
+button[id="canelar"]:hover {
+    background-color: #45a049;
+}
+
 .spinner {
     border: 16px solid #f3f3f3;
     border-top: 16px solid #3498db;
@@ -207,3 +211,55 @@ button[type="submit"]:hover {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
+
+  /* Estilo para o botão "Salvar Alterações" */
+#salvar-dados {
+    margin-top: 20px; /* Adiciona espaço entre o botão e o elemento acima */
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Estilo para o botão "Salvar Alterações" quando estiver com o mouse sobre ele */
+#salvar-dados:hover {
+    background-color: #45a049;
+}
+
+/* Estilo para o botão "Editar Dados" */
+#editar-dados {
+    margin-top: 20px; /* Adiciona espaço entre o botão e o elemento acima */
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Estilo para o botão "Editar Dados" quando estiver com o mouse sobre ele */
+#editar-dados:hover {
+    background-color: #45a049;
+}
+
+/* Estilo para o botão "Cancelar Edição" */
+#cancelar-edicao {
+    margin-top: 20px; /* Adiciona espaço entre o botão e o elemento acima */
+    padding: 10px 20px;
+    background-color: #f44336; /* Cor diferente para o botão de cancelamento */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-left: 10px; /* Adiciona espaço entre o botão de cancelar e o botão de salvar */
+}
+
+/* Estilo para o botão "Cancelar Edição" quando estiver com o mouse sobre ele */
+#cancelar-edicao:hover {
+    background-color: #e53935;
+}
