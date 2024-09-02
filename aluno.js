@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let alunoEspecifico = null;
     const alunoEspecificoUrl =  `https://bambina-admin-back.vercel.app/alunos/aluno/${alunoId}`;
     const turmasUrl = `https://bambina-admin-back.vercel.app/turmas`;
+    const pagamentosUrl = `https://bambina-admin-back.vercel.app/pagamentos/aluno/${alunoId}`;
 
     function calcularIdade(dataNascimento) {
         const hoje = new Date();
@@ -84,40 +85,40 @@ document.addEventListener('DOMContentLoaded', function() {
                 <input type="text" id="pais_nascimento" name="pais_nascimento" value="${aluno.pais_nascimento}" disabled>
                 
                 <label for="escola_profissao">Escola/Profissão:</label>
-                        <input type="text" id="escola_profissao" name="escola_profissao" value="${aluno.escola_profissao}" disabled>
-                        
-                        <label for="cep">CEP:</label>
-                        <input type="text" id="cep" name="cep" value="${aluno.cep}" disabled>
-                        
-                        <label for="endereco">Endereço:</label>
-                        <input type="text" id="endereco" name="endereco" value="${aluno.endereco}" disabled>
-                        
-                        <label for="contato_emergencia">Contato de Emergência:</label>
-                        <input type="text" id="contato_emergencia" name="contato_emergencia" value="${aluno.contato_emergencia}" disabled>
-                        
-                        <label for="convenio_saude">Convênio de Saúde:</label>
-                        <input type="text" id="convenio_saude" name="convenio_saude" value="${aluno.convenio_saude}" disabled>
-                        
-                        <label for="doencas_necessidades_especiais">Doenças e Necessidades Especiais:</label>
-                        <input type="text" id="doencas_necessidades_especiais" name="doencas_necessidades_especiais" value="${aluno.doencas_necessidades_especiais}" disabled>
-                        
-                        <label for="alergias">Alergias:</label>
-                        <input type="text" id="alergias" name="alergias" value="${aluno.alergias}" disabled>
-                        
-                        <label for="forma_pagamento">Forma de Pagamento:</label>
-                        <input type="text" id="forma_pagamento" name="forma_pagamento" value="${aluno.forma_pagamento}" disabled>
-                        
-                        <label for="data_ingresso">Data de Ingresso:</label>
-                        <input type="date" id="data_ingresso" name="data_ingresso" value="${aluno.data_ingresso}" disabled>
-                        
-                        <label for="data_saida">Data de Saída:</label>
-                        <input type="date" id="data_saida" name="data_saida" value="${aluno.data_saida || ''}" disabled>
-                        
-                        <label for="uso_imagem">Permite Uso de Imagem:</label>
-                        <input type="checkbox" id="uso_imagem" name="uso_imagem" ${aluno.uso_imagem ? 'checked' : ''} disabled>
-                        
-                        <label for="experimental">Período Experimental:</label>
-                        <input type="checkbox" id="experimental" name="experimental" ${aluno.experimental ? 'checked' : ''} disabled>
+                <input type="text" id="escola_profissao" name="escola_profissao" value="${aluno.escola_profissao}" disabled>
+                
+                <label for="cep">CEP:</label>
+                <input type="text" id="cep" name="cep" value="${aluno.cep}" disabled>
+                
+                <label for="endereco">Endereço:</label>
+                <input type="text" id="endereco" name="endereco" value="${aluno.endereco}" disabled>
+                
+                <label for="contato_emergencia">Contato de Emergência:</label>
+                <input type="text" id="contato_emergencia" name="contato_emergencia" value="${aluno.contato_emergencia}" disabled>
+                
+                <label for="convenio_saude">Convênio de Saúde:</label>
+                <input type="text" id="convenio_saude" name="convenio_saude" value="${aluno.convenio_saude}" disabled>
+                
+                <label for="doencas_necessidades_especiais">Doenças e Necessidades Especiais:</label>
+                <input type="text" id="doencas_necessidades_especiais" name="doencas_necessidades_especiais" value="${aluno.doencas_necessidades_especiais}" disabled>
+                
+                <label for="alergias">Alergias:</label>
+                <input type="text" id="alergias" name="alergias" value="${aluno.alergias}" disabled>
+                
+                <label for="forma_pagamento">Forma de Pagamento:</label>
+                <input type="text" id="forma_pagamento" name="forma_pagamento" value="${aluno.forma_pagamento}" disabled>
+                
+                <label for="data_ingresso">Data de Ingresso:</label>
+                <input type="date" id="data_ingresso" name="data_ingresso" value="${aluno.data_ingresso}" disabled>
+                
+                <label for="data_saida">Data de Saída:</label>
+                <input type="date" id="data_saida" name="data_saida" value="${aluno.data_saida || ''}" disabled>
+                
+                <label for="uso_imagem">Permite Uso de Imagem:</label>
+                <input type="checkbox" id="uso_imagem" name="uso_imagem" ${aluno.uso_imagem ? 'checked' : ''} disabled>
+                
+                <label for="experimental">Período Experimental:</label>
+                <input type="checkbox" id="experimental" name="experimental" ${aluno.experimental ? 'checked' : ''} disabled>
                 
                 <button type="button" id="editar-dados">Editar Dados</button>
                 <button type="button" id="cancelar-edicao" class="hidden">Cancelar Edição</button>
@@ -170,8 +171,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 experimental: document.getElementById('experimental').checked,
                 ids_turmas: Array.from(document.getElementById('turmas').selectedOptions).map(option => parseInt(option.value)) // Obtém os IDs das turmas selecionadas
             };
-
-            console.log(JSON.stringify(dadosEditados));
     
             fetch(`https://bambina-admin-back.vercel.app/alunos/editar-aluno/${alunoId}`, {
                 method: 'PUT',
@@ -192,7 +191,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     alunoEspecifico = data;
                     selecionarAba('dados');
                 });
-                // selecionarAba('dados'); // Volta para a aba de dados com os valores atualizados
             })
             .catch(error => {
                 console.error('Erro ao salvar os dados:', error);
@@ -200,25 +198,118 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+
+    function exibirPagamentos() {
+        fetch(pagamentosUrl)
+            .then(response => response.json())
+            .then(data => {
+                pagamentos = data;
+                detalhesAluno.innerHTML = `
+                    <div class="pagamentos-header">
+                        <h3>Pagamentos</h3>
+                        <button id="btn-adicionar-pagamento">Adicionar Pagamento</button>
+                    </div>
+                    ${pagamentos.length === 0 ? '<p>Nenhum pagamento registrado para este aluno.</p>' : pagamentos.map(p => `
+                        <div class="pagamento-item">
+                            <p><strong>Data do Pagamento:</strong> ${p.data_pagamento}</p>
+                            <p><strong>Valor:</strong> R$ ${p.valor.toFixed(2)}</p>
+                            <p><strong>Referência:</strong> ${p.referencia}</p>
+                            <p><strong>Observações:</strong> ${p.observacoes || ''}</p>
+                        </div>
+                    `).join('')}
+                `;
     
-
-
-    function exibirPagamentos(alunoId) {
-        const pagamentosDoAluno = pagamentos.filter(p => p.aluno_id == alunoId);
-
-        if (pagamentosDoAluno.length === 0) {
-            detalhesAluno.innerHTML = '<p>Nenhum pagamento registrado para este aluno.</p>';
-        } else {
-            detalhesAluno.innerHTML = pagamentosDoAluno.map(p => `
-                <div class="pagamento-item">
-                    <p><strong>Data do Pagamento:</strong> ${p.data_pagamento}</p>
-                    <p><strong>Valor:</strong> R$ ${p.valor.toFixed(2)}</p>
-                    <p><strong>Referência:</strong> ${p.referencia}</p>
-                </div>
-            `).join('');
-        }
+                // Adicionar funcionalidade ao botão de adicionar pagamento
+                const btnAdicionarPagamento = document.getElementById('btn-adicionar-pagamento');
+                btnAdicionarPagamento.addEventListener('click', function() {
+                    exibirModalPagamento(); // Função para exibir a modal de pagamento
+                });
+            })
+            .catch(error => {
+                console.error('Erro ao carregar pagamentos:', error);
+                detalhesAluno.innerHTML = '<p>Erro ao carregar os pagamentos.</p>';
+            });
     }
 
+    function exibirModalPagamento() {
+        // Cria a estrutura HTML para a modal
+        const modalHtml = `
+            <div class="modal-overlay">
+                <div class="modal">
+                    <h3>Adicionar Pagamento</h3>
+                    <form id="form-adicionar-pagamento">
+                        <label for="data_pagamento">Data do Pagamento:</label>
+                        <input type="date" id="data_pagamento" name="data_pagamento" required>
+    
+                        <label for="valor">Valor:</label>
+                        <input type="number" id="valor" name="valor" step="0.01" required>
+    
+                        <label for="referencia">Referência:</label>
+                        <input type="text" id="referencia" name="referencia" required>
+    
+                        <label for="observacoes">Observações:</label>
+                        <textarea id="observacoes" name="observacoes"></textarea>
+    
+                        <button type="submit">Adicionar</button>
+                        <button type="button" id="btn-cancelar">Cancelar</button>
+                    </form>
+                </div>
+            </div>
+        `;
+    
+        // Adiciona a modal ao body
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+    
+        // Função para remover a modal
+        function fecharModal() {
+            const modalOverlay = document.querySelector('.modal-overlay');
+            if (modalOverlay) {
+                modalOverlay.remove();
+            }
+        }
+    
+        // Adiciona evento para fechar a modal ao clicar em cancelar
+        document.getElementById('btn-cancelar').addEventListener('click', fecharModal);
+    
+        // Adiciona evento para processar o formulário de pagamento
+        document.getElementById('form-adicionar-pagamento').addEventListener('submit', function(event) {
+            event.preventDefault();
+    
+            const novoPagamento = {
+                aluno_id: alunoId, // ID do aluno atual
+                data_pagamento: document.getElementById('data_pagamento').value,
+                valor: parseFloat(document.getElementById('valor').value),
+                referencia: document.getElementById('referencia').value,
+                observacoes: document.getElementById('observacoes').value || null
+            };
+    
+            // Envia o novo pagamento para o servidor
+            fetch('https://bambina-admin-back.vercel.app/pagamentos/adicionar-pagamento', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(novoPagamento)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao adicionar pagamento.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('Pagamento adicionado com sucesso!');
+                fecharModal();
+                selecionarAba('pagamentos'); // Recarrega os pagamentos após adicionar um novo
+            })
+            .catch(error => {
+                console.error('Erro ao adicionar pagamento:', error);
+                alert('Erro ao adicionar pagamento. Tente novamente mais tarde.');
+            });
+        });
+    }
+    
+    
     function selecionarAba(aba) {
         menuOverview.classList.remove('active');
         menuDados.classList.remove('active');
@@ -232,14 +323,14 @@ document.addEventListener('DOMContentLoaded', function() {
             exibirDados(alunoEspecifico);
         } else if (aba === 'pagamentos') {
             menuPagamentos.classList.add('active');
-            exibirPagamentos(alunoId);
+            exibirPagamentos();
         }
     }
 
+    // Carregar dados iniciais
     Promise.all([
         fetch(alunoEspecificoUrl).then(response => response.json()).then(data => alunoEspecifico = data),
-        fetch(turmasUrl).then(response => response.json()).then(data => turmas = data),
-        fetch('pagamentos.json').then(response => response.json()).then(data => pagamentos = data.pagamentos)
+        fetch(turmasUrl).then(response => response.json()).then(data => turmas = data)
     ]).then(() => {
         if (alunoEspecifico) {
             selecionarAba('overview'); // Exibe o overview por padrão
