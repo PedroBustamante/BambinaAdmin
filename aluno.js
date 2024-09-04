@@ -14,6 +14,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const turmasUrl = `https://bambina-admin-back.vercel.app/turmas`;
     const pagamentosUrl = `https://bambina-admin-back.vercel.app/pagamentos/aluno/${alunoId}`;
 
+    function handleNull(value) {
+        return (value === null) || (value === 'null') ? '' : value;
+    }
+
+    function toNull(value) {
+        return value === '' ? null : value;
+    }
+
     function calcularIdade(dataNascimento) {
         const hoje = new Date();
         const nascimento = new Date(dataNascimento);
@@ -38,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
         detalhesAluno.innerHTML = `
             <div class="overview-content">
                 <h2>${aluno.nome}</h2>
-                <p><strong>Responsável:</strong> ${aluno.responsavel}</p>
+                <p><strong>Responsável:</strong> ${handleNull(aluno.responsavel)}</p>
                 <p><strong>Turmas:</strong> ${turmasDoAluno}</p>
                 <p><strong>Idade:</strong> ${idade} anos</p>
                 <p><strong>Status:</strong> ${status}</p>
@@ -62,57 +70,57 @@ document.addEventListener('DOMContentLoaded', function() {
         detalhesAluno.innerHTML = `
             <form id="form-editar-aluno">
                 <label for="nome">Nome:</label>
-                <input type="text" id="nome" name="nome" value="${aluno.nome}" disabled>
+                <input type="text" id="nome" name="nome" value="${handleNull(aluno.nome)}" disabled required>
                 
                 <label for="responsavel">Responsável:</label>
-                <input type="text" id="responsavel" name="responsavel" value="${aluno.responsavel}" disabled>
+                <input type="text" id="responsavel" name="responsavel" value="${handleNull(aluno.responsavel)}" disabled>
                 
                 <label for="turmas">Turmas:</label>
-                <select id="turmas" name="turmas" disabled>
+                <select id="turmas" name="turmas" disabled required>
                     ${turmasOptions}
                 </select>
                 
                 <label for="telefone">Telefone:</label>
-                <input type="text" id="telefone" name="telefone" value="${aluno.telefone}" disabled>
+                <input type="text" id="telefone" name="telefone" value="${handleNull(aluno.telefone)}" disabled required>
+
+                <label for="data_nascimento">Data de Nascimento:</label>
+                <input type="date" id="data_nascimento" name="data_nascimento" value="${aluno.data_nascimento}" disabled required>
+
+                <label for="data_ingresso">Data de Ingresso:</label>
+                <input type="date" id="data_ingresso" name="data_ingresso" value="${aluno.data_ingresso}" disabled required>
                 
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email" value="${aluno.email}" disabled>
-                
-                <label for="data_nascimento">Data de Nascimento:</label>
-                <input type="date" id="data_nascimento" name="data_nascimento" value="${aluno.data_nascimento}" disabled>
+                <input type="email" id="email" name="email" value="${handleNull(aluno.email)}" disabled>
                 
                 <label for="pais_nascimento">País de Nascimento:</label>
-                <input type="text" id="pais_nascimento" name="pais_nascimento" value="${aluno.pais_nascimento}" disabled>
+                <input type="text" id="pais_nascimento" name="pais_nascimento" value="${handleNull(aluno.pais_nascimento)}" disabled>
                 
                 <label for="escola_profissao">Escola/Profissão:</label>
-                <input type="text" id="escola_profissao" name="escola_profissao" value="${aluno.escola_profissao}" disabled>
+                <input type="text" id="escola_profissao" name="escola_profissao" value="${handleNull(aluno.escola_profissao)}" disabled>
                 
                 <label for="cep">CEP:</label>
-                <input type="text" id="cep" name="cep" value="${aluno.cep}" disabled>
+                <input type="text" id="cep" name="cep" value="${handleNull(aluno.cep)}" disabled>
                 
                 <label for="endereco">Endereço:</label>
-                <input type="text" id="endereco" name="endereco" value="${aluno.endereco}" disabled>
+                <input type="text" id="endereco" name="endereco" value="${handleNull(aluno.endereco)}" disabled>
                 
                 <label for="contato_emergencia">Contato de Emergência:</label>
-                <input type="text" id="contato_emergencia" name="contato_emergencia" value="${aluno.contato_emergencia}" disabled>
+                <input type="text" id="contato_emergencia" name="contato_emergencia" value="${handleNull(aluno.contato_emergencia)}" disabled>
                 
                 <label for="convenio_saude">Convênio de Saúde:</label>
-                <input type="text" id="convenio_saude" name="convenio_saude" value="${aluno.convenio_saude}" disabled>
+                <input type="text" id="convenio_saude" name="convenio_saude" value="${handleNull(aluno.convenio_saude)}" disabled>
                 
                 <label for="doencas_necessidades_especiais">Doenças e Necessidades Especiais:</label>
-                <input type="text" id="doencas_necessidades_especiais" name="doencas_necessidades_especiais" value="${aluno.doencas_necessidades_especiais}" disabled>
+                <input type="text" id="doencas_necessidades_especiais" name="doencas_necessidades_especiais" value="${handleNull(aluno.doencas_necessidades_especiais)}" disabled>
                 
                 <label for="alergias">Alergias:</label>
-                <input type="text" id="alergias" name="alergias" value="${aluno.alergias}" disabled>
+                <input type="text" id="alergias" name="alergias" value="${handleNull(aluno.alergias)}" disabled>
                 
                 <label for="forma_pagamento">Forma de Pagamento:</label>
-                <input type="text" id="forma_pagamento" name="forma_pagamento" value="${aluno.forma_pagamento}" disabled>
-                
-                <label for="data_ingresso">Data de Ingresso:</label>
-                <input type="date" id="data_ingresso" name="data_ingresso" value="${aluno.data_ingresso}" disabled>
+                <input type="text" id="forma_pagamento" name="forma_pagamento" value="${handleNull(aluno.forma_pagamento)}" disabled>
                 
                 <label for="data_saida">Data de Saída:</label>
-                <input type="date" id="data_saida" name="data_saida" value="${aluno.data_saida || ''}" disabled>
+                <input type="date" id="data_saida" name="data_saida" value="${aluno.data_saida}" disabled>
                 
                 <label for="uso_imagem">Permite Uso de Imagem:</label>
                 <input type="checkbox" id="uso_imagem" name="uso_imagem" ${aluno.uso_imagem ? 'checked' : ''} disabled>
@@ -149,27 +157,27 @@ document.addEventListener('DOMContentLoaded', function() {
         // Enviar os dados editados para o servidor ao clicar em "Salvar Alterações"
         document.getElementById('form-editar-aluno').addEventListener('submit', function(event) {
             event.preventDefault();
-    
+        
             const dadosEditados = {
-                nome: document.getElementById('nome').value,
-                responsavel: document.getElementById('responsavel').value,
-                telefone: document.getElementById('telefone').value,
-                email: document.getElementById('email').value,
-                data_nascimento: document.getElementById('data_nascimento').value,
-                pais_nascimento: document.getElementById('pais_nascimento').value,
-                escola_profissao: document.getElementById('escola_profissao').value,
-                cep: document.getElementById('cep').value,
-                endereco: document.getElementById('endereco').value,
-                contato_emergencia: document.getElementById('contato_emergencia').value,
-                convenio_saude: document.getElementById('convenio_saude').value,
-                doencas_necessidades_especiais: document.getElementById('doencas_necessidades_especiais').value,
-                alergias: document.getElementById('alergias').value,
-                forma_pagamento: document.getElementById('forma_pagamento').value,
-                data_ingresso: document.getElementById('data_ingresso').value,
-                data_saida: document.getElementById('data_saida').value || null,
+                nome: toNull(document.getElementById('nome').value),
+                responsavel: toNull(document.getElementById('responsavel').value),
+                telefone: toNull(document.getElementById('telefone').value),
+                email: toNull(document.getElementById('email').value),
+                data_nascimento: toNull(document.getElementById('data_nascimento').value),
+                pais_nascimento: toNull(document.getElementById('pais_nascimento').value),
+                escola_profissao: toNull(document.getElementById('escola_profissao').value),
+                cep: toNull(document.getElementById('cep').value),
+                endereco: toNull(document.getElementById('endereco').value),
+                contato_emergencia: toNull(document.getElementById('contato_emergencia').value),
+                convenio_saude: toNull(document.getElementById('convenio_saude').value),
+                doencas_necessidades_especiais: toNull(document.getElementById('doencas_necessidades_especiais').value),
+                alergias: toNull(document.getElementById('alergias').value),
+                forma_pagamento: toNull(document.getElementById('forma_pagamento').value),
+                data_ingresso: toNull(document.getElementById('data_ingresso').value),
+                data_saida: toNull(document.getElementById('data_saida').value) || null,
                 uso_imagem: document.getElementById('uso_imagem').checked,
                 experimental: document.getElementById('experimental').checked,
-                ids_turmas: Array.from(document.getElementById('turmas').selectedOptions).map(option => parseInt(option.value)) // Obtém os IDs das turmas selecionadas
+                ids_turmas: Array.from(document.getElementById('turmas').selectedOptions).map(option => parseInt(option.value))
             };
     
             fetch(`https://bambina-admin-back.vercel.app/alunos/editar-aluno/${alunoId}`, {
