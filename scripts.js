@@ -171,6 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const professorResponsavel = professores.find(prof => prof.id === turma.professor_responsavel_id);
                     const aide = professores.find(prof => prof.id === turma.aide_id);
                     resultados.push({
+                        id: turma.id,
                         tipo: 'Turma',
                         nome: turma.nome,
                         detalhes: `Horário: ${turma.horario}, Professor: ${professorResponsavel.nome_completo}, Aide: ${aide ? aide.nome_completo : 'Nenhum'}`
@@ -180,13 +181,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Exibir resultados
-        resultadosLista.innerHTML = resultados.length > 0 ? resultados.map(r => `
-            <div class="resultado-item">
-                <h3>${r.tipo}: ${r.nome}</h3>
-                <p>${r.detalhes}</p>
-                ${r.tipo === 'Aluno' ? `<button onclick="location.href='aluno.html?id=${r.id}'">Ver Detalhes</button>` : ''}
-            </div>
-        `).join('') : '<p>Nenhum resultado encontrado.</p>';
+    resultadosLista.innerHTML = resultados.length > 0 ? resultados.map(r => `
+        <div class="resultado-item">
+            <h3>${r.tipo}: ${r.nome}</h3>
+            <p>${r.detalhes}</p>
+            ${r.tipo === 'Aluno' ? `<button onclick="location.href='aluno.html?id=${r.id}'">Ver Detalhes</button>` : ''}
+            ${r.tipo === 'Turma' ? `<button onclick="location.href='turma.html?id=${r.id}'">Ver Detalhes</button>` : ''}
+        </div>
+    `).join('') : '<p>Nenhum resultado encontrado.</p>';
     }
 
     // Adicionar eventos de filtro
