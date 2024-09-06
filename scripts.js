@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const alunoFiltro = document.getElementById('aluno-filtro');
+    const filtroExperimental = document.getElementById('filtro-experimental'); // Seleciona o checkbox
     const professorFiltro = document.getElementById('professor-filtro');
     const turmaFiltro = document.getElementById('turma-filtro');
     const resultadosLista = document.getElementById('resultados-lista');
@@ -23,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // URLs dos endpoints
     const alunosUrl = `https://bambina-admin-back.vercel.app/alunos`;
+    const alunosExperimentalUrl = `https://bambina-admin-back.vercel.app/alunos/experimental`;
     const professoresUrl = `https://bambina-admin-back.vercel.app/professores`;
     const turmasUrl = `https://bambina-admin-back.vercel.app/turmas`;
 
@@ -36,10 +38,11 @@ document.addEventListener('DOMContentLoaded', function() {
         loadingSpinner.classList.add('hidden');
     }
 
-    // Funções para carregar os dados das APIs
+    // Função para carregar alunos com base no filtro de experimentais
     async function carregarAlunos() {
         try {
-            const response = await fetch(alunosUrl);
+            const url = filtroExperimental.checked ? alunosExperimentalUrl : alunosUrl;
+            const response = await fetch(url);
             const data = await response.json();
             alunos = data;
         } catch (error) {
@@ -181,20 +184,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Exibir resultados
-    resultadosLista.innerHTML = resultados.length > 0 ? resultados.map(r => `
-        <div class="resultado-item">
-            <h3>${r.tipo}: ${r.nome}</h3>
-            <p>${r.detalhes}</p>
-            ${r.tipo === 'Aluno' ? `<button onclick="location.href='aluno.html?id=${r.id}'">Ver Detalhes</button>` : ''}
-            ${r.tipo === 'Turma' ? `<button onclick="location.href='turma.html?id=${r.id}'">Ver Detalhes</button>` : ''}
-        </div>
-    `).join('') : '<p>Nenhum resultado encontrado.</p>';
+        resultadosLista.innerHTML = resultados.length > 0 ? resultados.map(r => `
+            <div class="resultado-item">
+                <h3>${r.tipo}: ${r.nome}</h3>
+                <p>${r.detalhes}</p>
+                ${r.tipo === 'Aluno' ? `<button onclick="location.href='aluno.html?id=${r.id}'">Ver Detalhes</button>` : ''}
+                ${r.tipo === 'Turma' ? `<button onclick="location.href='turma.html?id=${r.id}'">Ver Detalhes</button>` : ''}
+            </div>
+        `).join('') : '<p>Nenhum resultado encontrado.</p>';
     }
 
     // Adicionar eventos de filtro
     alunoFiltro.addEventListener('input', filtrarResultados);
     professorFiltro.addEventListener('input', filtrarResultados);
     turmaFiltro.addEventListener('change', filtrarResultados);
+
+    // Adicionar evento ao checkbox de "alunos experimentais"
+    filtroExperimental.addEventListener('change', recarregarDados);
 
     // Inicialmente, o conteúdo principal fica oculto
     mainContent.classList.add('hidden');

@@ -25,8 +25,15 @@
         <section id="filtros">
             <div id="filtro-alunos" class="filtro-grupo" style="display:none;">
                 <h2>Filtrar por Aluno</h2>
-                <label for="aluno-filtro">Nome do Aluno:</label>
-                <input type="text" id="aluno-filtro" placeholder="Digite o nome do aluno">
+                <div class="filtro-aluno-container">
+                    <label for="aluno-filtro">Nome do Aluno:</label>
+                    <input type="text" id="aluno-filtro" placeholder="Digite o nome do aluno">
+                    
+                    <div class="filtro-experimental-container">
+                        <label for="filtro-experimental">Experimental</label>
+                        <input type="checkbox" id="filtro-experimental">
+                    </div>
+                </div>
             </div>
             <div id="filtro-professores" class="filtro-grupo" style="display:none;">
                 <h2>Filtrar por Professor</h2>

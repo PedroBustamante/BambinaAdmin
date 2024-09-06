@@ -331,3 +331,17 @@ button[id="canelar"]:hover {
     background-color: #e0e0e0;
     color: #000;
 }
+
+.filtro-aluno-container {
+    display: flex;
+    align-items: center;
+}
+
+.filtro-experimental-container {
+    margin-left: 40px; /* Espaçamento entre o campo de nome e o checkbox */
+}
+
+#filtro-experimental {
+    transform: scale(3); /* Aumenta o tamanho do checkbox */
+    margin-left: 10px; /* Espaço entre o texto e o checkbox */
+}

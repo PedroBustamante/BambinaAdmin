@@ -15,26 +15,30 @@
     <main>
         <form id="form-adicionar-aluno">
             <label for="nome">Nome do Aluno:</label>
-            <input type="text" id="nome" name="nome" required>
+            <input type="text" id="nome" name="nome">
 
-            <label for="turmas">Turma:</label>
-            <select id="turmas" name="turmas" required>
-                <option value="">Selecione uma turma</option>
-                <!-- As opções de turmas serão carregadas aqui via JavaScript -->
-            </select>
-            
+            <div id="turmas-container">
+                <label for="turmas">Turmas:</label>
+                <div class="turma-selecionada">
+                    <select id="turmas" name="turmas">
+                        <option value="">Selecione uma turma</option>
+                        <!-- As opções de turmas serão carregadas aqui via JavaScript -->
+                    </select>
+                </div>
+            </div>
+            <button type="button" id="adicionar-turma">Adicionar outra turma</button>
             
             <label for="responsavel">Responsável:</label>
             <input type="text" id="responsavel" name="responsavel">
             
             <label for="telefone">Telefone:</label>
-            <input type="tel" id="telefone" name="telefone" required>
+            <input type="tel" id="telefone" name="telefone">
             
             <label for="email">Email:</label>
             <input type="email" id="email" name="email">
             
             <label for="data_nascimento">Data de Nascimento:</label>
-            <input type="date" id="data_nascimento" name="data_nascimento" required>
+            <input type="date" id="data_nascimento" name="data_nascimento">
             
             <label for="pais_nascimento">País de Nascimento:</label>
             <input type="text" id="pais_nascimento" name="pais_nascimento">
@@ -64,7 +68,7 @@
             <input type="text" id="forma_pagamento" name="forma_pagamento">
             
             <label for="data_ingresso">Data de Ingresso:</label>
-            <input type="date" id="data_ingresso" name="data_ingresso" required>
+            <input type="date" id="data_ingresso" name="data_ingresso">
             
             <label for="data_saida">Data de Saída:</label>
             <input type="date" id="data_saida" name="data_saida">
@@ -74,7 +78,7 @@
             
             <label for="experimental">Período Experimental:</label>
             <input type="checkbox" id="experimental" name="experimental">
-
+            
             <button type="submit">Adicionar Aluno</button>
         </form>
     </main>
