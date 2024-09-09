@@ -61,10 +61,8 @@ document.addEventListener('DOMContentLoaded', function() {
             return turma ? turma.id : ''; // Seleciona o ID da turma para usar no dropdown
         });
     
-        // Gerar as opções do dropdown com todas as turmas disponíveis
         const turmasOptions = turmas.map(turma => {
-            const selected = turmasDoAluno.includes(turma.id) ? 'selected' : ''; // Marca como selecionada se o aluno estiver nessa turma
-            return `<option value="${turma.id}" ${selected}>${turma.nome} (${turma.horario})</option>`;
+            return `<option value="${turma.id}">${turma.nome} (${turma.horario})</option>`;
         }).join('');
     
         detalhesAluno.innerHTML = `
@@ -75,17 +73,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 <label for="responsavel">Responsável:</label>
                 <input type="text" id="responsavel" name="responsavel" value="${handleNull(aluno.responsavel)}" disabled>
                 
-                <label for="turmas">Turmas:</label>
-                <select id="turmas" name="turmas" disabled required>
-                    ${turmasOptions}
-                </select>
+                <label>Turmas:</label>
+                <div id="turmas-container">
+                    ${turmasDoAluno.map(idTurma => `
+                        <div class="turma-selecionada">
+                            <select name="turmas" disabled required>
+                                <option value="">Selecione uma turma</option>
+                                ${turmasOptions.replace(
+                                    `value="${idTurma}"`,
+                                    `value="${idTurma}" selected`
+                                )}
+                            </select>
+                        </div>
+                    `).join('')}
+                </div>
+                <button type="button" id="adicionar-turma" disabled>Adicionar outra turma</button>
+                <button type="button" class="remover-turma" disabled>Remover última turma</button>
                 
                 <label for="telefone">Telefone:</label>
                 <input type="text" id="telefone" name="telefone" value="${handleNull(aluno.telefone)}" disabled required>
-
+    
                 <label for="data_nascimento">Data de Nascimento:</label>
                 <input type="date" id="data_nascimento" name="data_nascimento" value="${aluno.data_nascimento}" disabled required>
-
+    
                 <label for="data_ingresso">Data de Ingresso:</label>
                 <input type="date" id="data_ingresso" name="data_ingresso" value="${aluno.data_ingresso}" disabled required>
                 
@@ -127,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 <label for="experimental">Período Experimental:</label>
                 <input type="checkbox" id="experimental" name="experimental" ${aluno.experimental ? 'checked' : ''} disabled>
-                
+    
                 <button type="button" id="editar-dados">Editar Dados</button>
                 <button type="button" id="cancelar-edicao" class="hidden">Cancelar Edição</button>
                 <button type="submit" id="salvar-dados" disabled>Salvar Alterações</button>
@@ -137,10 +147,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const editarButton = document.getElementById('editar-dados');
         const salvarButton = document.getElementById('salvar-dados');
         const cancelarButton = document.getElementById('cancelar-edicao');
+        const adicionarTurmaButton = document.getElementById('adicionar-turma');
     
         // Habilitar edição ao clicar no botão "Editar Dados"
         editarButton.addEventListener('click', function() {
-            const inputs = document.querySelectorAll('#form-editar-aluno input, #form-editar-aluno select');
+            const inputs = document.querySelectorAll('#form-editar-aluno input, #form-editar-aluno select, #form-editar-aluno button');
             inputs.forEach(input => input.disabled = false);
             salvarButton.disabled = false;
             cancelarButton.classList.remove('hidden');
@@ -154,10 +165,47 @@ document.addEventListener('DOMContentLoaded', function() {
             editarButton.disabled = false; // Reabilita o botão de edição
         });
     
+        // Adicionar funcionalidade de adicionar turma
+        adicionarTurmaButton.addEventListener('click', function() {
+            const novaDiv = document.createElement('div');
+            novaDiv.classList.add('turma-selecionada');
+    
+            const novoSelect = document.createElement('select');
+            novoSelect.name = 'turmas';
+            novoSelect.required = true;
+            novoSelect.innerHTML = `<option value="">Selecione uma turma</option>${turmasOptions}`;
+    
+            const removerButton = document.createElement('button');
+            removerButton.type = 'button';
+            removerButton.textContent = 'Remover';
+            removerButton.classList.add('remover-turma');
+    
+            novaDiv.appendChild(novoSelect);
+            novaDiv.appendChild(removerButton);
+    
+            document.getElementById('turmas-container').appendChild(novaDiv);
+    
+            // Adicionar evento de remoção
+            removerButton.addEventListener('click', function() {
+                novaDiv.remove();
+            });
+        });
+    
+        // Adicionar funcionalidade de remoção de turma já existente
+        document.querySelectorAll('.remover-turma').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.target.closest('.turma-selecionada').remove();
+            });
+        });
+    
         // Enviar os dados editados para o servidor ao clicar em "Salvar Alterações"
         document.getElementById('form-editar-aluno').addEventListener('submit', function(event) {
             event.preventDefault();
         
+            const turmasSelecionadas = Array.from(document.querySelectorAll('select[name="turmas"]'))
+                .map(select => select.value)
+                .filter(value => value !== ''); // Remove turmas não selecionadas
+    
             const dadosEditados = {
                 nome: toNull(document.getElementById('nome').value),
                 responsavel: toNull(document.getElementById('responsavel').value),
@@ -177,7 +225,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 data_saida: toNull(document.getElementById('data_saida').value) || null,
                 uso_imagem: document.getElementById('uso_imagem').checked,
                 experimental: document.getElementById('experimental').checked,
-                ids_turmas: Array.from(document.getElementById('turmas').selectedOptions).map(option => parseInt(option.value))
+                ids_turmas: turmasSelecionadas // Lista de IDs das turmas selecionadas
             };
     
             fetch(`https://bambina-admin-back.vercel.app/alunos/editar-aluno/${alunoId}`, {
@@ -195,7 +243,7 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(data => {
                 alert('Dados salvos com sucesso!');
-                fetch(alunoEspecificoUrl).then(response => response.json()).then(data =>    {
+                fetch(alunoEspecificoUrl).then(response => response.json()).then(data => {
                     alunoEspecifico = data;
                     selecionarAba('dados');
                 });
@@ -205,7 +253,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Erro ao salvar os dados. Tente novamente mais tarde.');
             });
         });
-    }
+    }    
 
     function exibirPagamentos() {
         fetch(pagamentosUrl)
