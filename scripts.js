@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
         btnAdd.textContent = 'Adicionar Professor';
         btnAdd.classList.remove('hidden');
         btnAdd.onclick = function() {
-            window.location.href = 'adicionarProfessor.html';
+            window.location.href = 'professores/adicionarProfessor.html';
         };
     });
 
