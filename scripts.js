@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
         btnAdd.textContent = 'Adicionar Aluno';
         btnAdd.classList.remove('hidden');
         btnAdd.onclick = function() {
-            window.location.href = 'adicionarAluno.html';
+            window.location.href = 'alunos/adicionarAluno.html';
         };
     });
 
@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="resultado-item">
                 <h3>${r.tipo}: ${r.nome}</h3>
                 <p>${r.detalhes}</p>
-                ${r.tipo === 'Aluno' ? `<button onclick="location.href='aluno.html?id=${r.id}'">Ver Detalhes</button>` : ''}
+                ${r.tipo === 'Aluno' ? `<button onclick="location.href='alunos/aluno.html?id=${r.id}'">Ver Detalhes</button>` : ''}
                 ${r.tipo === 'Turma' ? `<button onclick="location.href='turma.html?id=${r.id}'">Ver Detalhes</button>` : ''}
             </div>
         `).join('') : '<p>Nenhum resultado encontrado.</p>';

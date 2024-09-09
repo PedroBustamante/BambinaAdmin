@@ -1,0 +1,347 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    display: flex;
+    justify-content: flex-start;
+    border-bottom: 1px solid #ddd;
+}
+
+header img#logo {
+    height: 70px; /* Aumentar o tamanho da imagem */
+    margin-bottom: 15px; /* Espaço entre a imagem e o título */
+    /* margin-left: 15px; */
+}
+
+header h1 {
+    margin: 0;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    background-color: #333;
+    width: 100%; /* Para que o menu ocupe toda a largura */
+    margin-top: 1rem; /* Espaço entre o título e o menu */
+}
+
+nav ul li {
+    margin: 0 1rem;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    display: block;
+}
+
+nav ul li a:hover {
+    background-color: #4CAF50;
+}
+
+main {
+    padding: 2rem;
+}
+
+#filtros {
+    margin-bottom: 2rem;
+}
+
+.filtro-grupo {
+    margin-bottom: 2rem;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+input, select {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+#resultados {
+    margin-top: 2rem;
+}
+
+.resultado-item {
+    background-color: #fff;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.resultado-item h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    flex: 1;
+}
+
+.resultado-item p {
+    margin: 0.5rem 0;
+    flex: 2;
+}
+
+.resultado-item button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.resultado-item button:hover {
+    background-color: #45a049;
+}
+
+.hidden {
+    display: none;
+}
+
+.overview-content, .dados-content, .pagamentos-content {
+    margin-top: 1rem;
+}
+
+.pagamento-item {
+    background-color: #fff;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+#btn-add {
+    /* position: absolute; */
+    top: 1.5rem;
+    right: 2rem;
+    padding: 0.5rem 1rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#btn-add.hidden {
+    display: none;
+}
+
+#btn-add:hover {
+    background-color: #45a049;
+}
+
+.select-multiple {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.select-multiple .option {
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.select-multiple .option.selected {
+    background-color: #22e129;
+    color: white;
+    border-color: #22e129;
+}
+
+.select-multiple .option:hover {
+    border-color: #22e129;
+}
+
+button[type="submit"] {
+    margin-top: 20px; /* Adiciona espaço entre o botão e o elemento acima */
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px; 
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+button[id="canelar"]:hover {
+    background-color: #45a049;
+}
+
+.spinner {
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid #3498db;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000; /* Coloca o spinner acima de outros conteúdos */
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Estilo para o botão "Salvar Alterações" */
+#salvar-dados {
+    margin-top: 20px; /* Adiciona espaço entre o botão e o elemento acima */
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Estilo para o botão "Salvar Alterações" quando estiver com o mouse sobre ele */
+#salvar-dados:hover {
+    background-color: #45a049;
+}
+
+/* Estilo para o botão "Editar Dados" */
+#editar-dados {
+    margin-top: 20px; /* Adiciona espaço entre o botão e o elemento acima */
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Estilo para o botão "Editar Dados" quando estiver com o mouse sobre ele */
+#editar-dados:hover {
+    background-color: #45a049;
+}
+
+/* Estilo para o botão "Cancelar Edição" */
+#cancelar-edicao {
+    margin-top: 20px; /* Adiciona espaço entre o botão e o elemento acima */
+    padding: 10px 20px;
+    background-color: #f44336; /* Cor diferente para o botão de cancelamento */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-left: 10px; /* Adiciona espaço entre o botão de cancelar e o botão de salvar */
+}
+
+/* Estilo para o botão "Cancelar Edição" quando estiver com o mouse sobre ele */
+#cancelar-edicao:hover {
+    background-color: #e53935;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    width: 300px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.modal h3 {
+    margin-top: 0;
+}
+
+.modal button {
+    margin-top: 10px;
+    padding: 8px 12px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.modal button#btn-cancelar {
+    background-color: #f44336;
+    margin-left: 10px;
+}
+
+.modal button:hover {
+    opacity: 0.9;
+}
+
+.back-button {
+    display: inline-block;
+    margin-right: 20px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #333;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+    transition: background-color 0.3s;
+    position: absolute;
+    left: 10px;
+}
+
+.back-button:hover {
+    
+    background-color: #e0e0e0;
+    color: #000;
+}
+
+.filtro-aluno-container {
+    display: flex;
+    align-items: center;
+}
+
+.filtro-experimental-container {
+    margin-left: 40px; /* Espaçamento entre o campo de nome e o checkbox */
+}
+
+#filtro-experimental {
+    transform: scale(3); /* Aumenta o tamanho do checkbox */
+    margin-left: 10px; /* Espaço entre o texto e o checkbox */
+}

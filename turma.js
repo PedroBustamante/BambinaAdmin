@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="resultado-item">
                 <h3>${aluno.nome}</h3>
                 <p>Responsável: ${aluno.responsavel}</p>
-                <button onclick="location.href='aluno.html?id=${aluno.id}'">Ver Detalhes</button>
+                <button onclick="location.href='alunos/aluno.html?id=${aluno.id}'">Ver Detalhes</button>
             </div>
         `).join('') : '<p>Nenhum aluno encontrado para essa turma.</p>';
     }
