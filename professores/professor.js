@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const turmasSolo = document.getElementById('turmas-solo');
     const turmasComAide = document.getElementById('turmas-com-aide');
     const turmasComoAide = document.getElementById('turmas-como-aide');
+    const salarioMesAtual = document.getElementById('salario-mes-atual');
+    const salarioMesAnterior = document.getElementById('salario-mes-anterior');
     
     const urlParams = new URLSearchParams(window.location.search);
     const professorId = urlParams.get('id');
@@ -47,6 +49,51 @@ document.addEventListener('DOMContentLoaded', function () {
     
         calendarioHtml += '</table>';
         return calendarioHtml;
+    }
+
+    function calcularSalario(turmas, mes, ano) {
+        let salarioTotal = 0;
+        let salarioDetalhado = '';
+
+        const diasTrabalhados = new Set(); // Para calcular transporte, dia único em que ele esteve na escola
+
+        turmas.forEach(turma => {
+            const tipoTurma = turma.aide_id === null ? 'solo' : (turma.professor_responsavel_id === parseInt(professorId) ? 'com_aide' : 'como_aide');
+            const horasPorDia = turma.horas_por_dia;
+            const diasSemana = turma.dias_semana;
+            let salarioPorTurma = 0; 
+
+            // Verificar cada dia do mês
+            const diasDoMes = new Date(ano, mes + 1, 0).getDate();
+            for (let dia = 1; dia <= diasDoMes; dia++) {
+                const dataAtual = new Date(ano, mes, dia);
+                const diaSemana = dataAtual.toLocaleDateString('pt-BR', { weekday: 'long' }).toLowerCase();
+
+                if (diasSemana.includes(diaSemana)) {
+                    diasTrabalhados.add(dia); // Marca o dia trabalhado para cálculo de transporte
+
+                    // Cálculo do salário por turma
+                    if (tipoTurma === 'solo') {
+                        salarioPorTurma += horasPorDia * 100;
+                        salarioTotal += horasPorDia * 100; // 100 reais por hora de turma solo
+                    } else if (tipoTurma === 'com_aide') {
+                        salarioTotal += horasPorDia * 75; // 75 reais por hora de turma com aide
+                        salarioPorTurma += horasPorDia * 75;
+                    } else if (tipoTurma === 'como_aide') {
+                        salarioTotal += horasPorDia * 50; // 50 reais por hora como aide
+                        salarioPorTurma += horasPorDia * 50;
+                    }
+                }
+            }
+            salarioDetalhado += `Turma ${turma.nome} (solo) - ${horasPorDia} horas: R$ ${salarioPorTurma}<br>`;
+        });
+
+        // Cálculo de transporte
+        const transporte = diasTrabalhados.size * 20;
+        salarioTotal += transporte;
+        salarioDetalhado += `Transporte: ${diasTrabalhados.size} dias: R$ ${transporte}<br>`;
+
+        return { salarioTotal, salarioDetalhado };
     }
     
     // Função para carregar as informações do professor
@@ -110,20 +157,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 turmasComoAide.innerHTML += `<p>${turma.nome} - ${turma.horario} </p>`;
             });
         }
+
+        // Calcular salário para o mês atual e o mês anterior
+        const { salarioTotal: salarioAtual, salarioDetalhado: detalhesSalarioAtual } = calcularSalario([...solo, ...comAide, ...comoAide], mesAtual, anoAtual);
+        const { salarioTotal: salarioAnterior, salarioDetalhado: detalhesSalarioAnterior } = calcularSalario([...solo, ...comAide, ...comoAide], mesAnterior, anoAnterior);
+        
+        salarioMesAtual.innerHTML = `<h3>Salário Mês Atual</h3><p>${detalhesSalarioAtual}</p><p><strong>Total: R$ ${salarioAtual}</strong></p>`;
+        salarioMesAnterior.innerHTML = `<h3>Salário Mês Anterior</h3><p>${detalhesSalarioAnterior}</p><p><strong>Total: R$ ${salarioAnterior}</strong></p>`;
     })
     .catch(error => {
         console.error('Erro ao carregar as turmas do professor:', error);
     });
-    // Carregar o calendário do mês atual e do mês anterior
-    // const dataAtual = new Date();
-    // const mesAtual = dataAtual.getMonth();
-    // const anoAtual = dataAtual.getFullYear();
-    
-    // Mês atual
-    // calendarioMesAtual.innerHTML = gerarCalendario(mesAtual, anoAtual);
-    
-    // Mês anterior
-    // const mesAnterior = mesAtual === 0 ? 11 : mesAtual - 1;
-    // const anoAnterior = mesAtual === 0 ? anoAtual - 1 : anoAtual;
-    // calendarioMesAnterior.innerHTML = gerarCalendario(mesAnterior, anoAnterior);
 });
