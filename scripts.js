@@ -13,6 +13,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const filtroAlunos = document.getElementById('filtro-alunos');
     const filtroProfessores = document.getElementById('filtro-professores');
     const filtroTurmas = document.getElementById('filtro-turmas');
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+    const paginationInfo = document.getElementById('pagination-info');
+    const paginationControls = document.getElementById('pagination-controls')
 
     const mainContent = document.querySelector('main');
     const btnAdd = document.getElementById('btn-add'); // Seleciona o botão de adicionar
@@ -21,6 +25,10 @@ document.addEventListener('DOMContentLoaded', function() {
     let alunos = [];
     let professores = [];
     let turmas = [];
+    let currentPage = 1;
+    let totalResults = 0;
+    const limit = 10; // Número de alunos por página
+    let debounceTimeout;
 
     // URLs dos endpoints
     const alunosUrl = `https://bambina-admin-back.vercel.app/alunos`;
@@ -39,16 +47,89 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Função para carregar alunos com base no filtro de experimentais
-    async function carregarAlunos() {
+     // Função de debounce
+     function debounce(func, delay) {
+        return function() {
+            const context = this;
+            const args = arguments;
+            clearTimeout(debounceTimeout);
+            debounceTimeout = setTimeout(() => func.apply(context, args), delay);
+        };
+    }
+
+    // Função para carregar alunos com base no filtro de experimentais, paginação e filtro
+    async function carregarAlunos(page = 1) {
+        mostrarSpinner();
+        const offset = (page - 1) * limit;
+        const filter = alunoFiltro.value.trim().toLowerCase();
+    
+        // Definir a URL base para a requisição
+        let url = `${alunosUrl}?limit=${limit}&offset=${offset}`;
+    
+        // Adicionar o filtro se estiver preenchido
+        if (filter) {
+            url += `&filtro=${filter}`;
+        }
+    
+        // Adicionar o parâmetro experimental se o checkbox estiver marcado
+        if (filtroExperimental.checked) {
+            url += `&experimental=true`;
+        }
+    
         try {
-            const url = filtroExperimental.checked ? alunosExperimentalUrl : alunosUrl;
             const response = await fetch(url);
             const data = await response.json();
-            alunos = data;
+            alunos = data.data; // Supondo que a resposta tem uma chave "alunos"
+            totalResults = data.total; // Supondo que a resposta tem uma chave "total"
+            atualizarPaginacao(); // Atualiza a paginação conforme os resultados
+            filtrarResultados();  // Atualiza os resultados filtrados
         } catch (error) {
             console.error('Erro ao carregar alunos:', error);
+        } finally {
+            esconderSpinner();
         }
     }
+    
+
+    // Função para atualizar a exibição da paginação
+    function atualizarPaginacao() {
+        paginationInfo.textContent = `Página ${currentPage} de ${Math.ceil(totalResults / limit)}`;
+        btnPrev.classList.toggle('hidden', currentPage === 1);
+        btnNext.classList.toggle('hidden', currentPage >= Math.ceil(totalResults / limit));
+        paginationControls.classList.remove('hidden');
+    }
+
+    // Eventos de paginação
+    btnPrev.addEventListener('click', function() {
+        if (currentPage > 1) {
+            currentPage--;
+            carregarAlunos(currentPage);
+        }
+    });
+
+    btnNext.addEventListener('click', function() {
+        if (currentPage < Math.ceil(totalResults / limit)) {
+            currentPage++;
+            carregarAlunos(currentPage);
+        }
+    });
+
+    // Atualizar a chamada do filtro de alunos para usar o debounce
+    alunoFiltro.addEventListener('input', debounce(function() {
+        currentPage = 1;
+        carregarAlunos(currentPage);
+    }, 300)); // 300ms de atraso
+
+    // Recarregar alunos ao modificar o filtro experimental
+    filtroExperimental.addEventListener('change', function() {
+        currentPage = 1;
+        carregarAlunos(currentPage);
+    });
+
+    // Chamar a função carregarAlunos ao mostrar a página
+    window.addEventListener('pageshow', function(event) {
+        carregarAlunos(currentPage);
+    });
 
     async function carregarProfessores() {
         try {
@@ -144,17 +225,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (filtroAlunos.style.display === 'block') {
             alunos.forEach(aluno => {
-                const alunoNome = aluno.nome.toLowerCase();
+                // const alunoNome = aluno.nome.toLowerCase();
                 const alunoTurmas = aluno.ids_turmas.map(id => turmas.find(turma => turma.id === id).nome);
+                resultados.push({
+                    id: aluno.id,
+                    tipo: 'Aluno',
+                    nome: aluno.nome,
+                    detalhes: `Turmas: ${alunoTurmas.join(', ')}`
+                });
 
-                if (alunoNome.includes(alunoFiltroValue) || alunoFiltroValue === '') {
-                    resultados.push({
-                        id: aluno.id,
-                        tipo: 'Aluno',
-                        nome: aluno.nome,
-                        detalhes: `Turmas: ${alunoTurmas.join(', ')}`
-                    });
-                }
             });
         } else if (filtroProfessores.style.display === 'block') {
             professores.forEach(professor => {
