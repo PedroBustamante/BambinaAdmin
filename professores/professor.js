@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const professorUrl = `https://bambina-admin-back.vercel.app/professores/professor/${professorId}`;
     const turmasUrl = `https://bambina-admin-back.vercel.app/turmas/professor/${professorId}`;
+
+    let senior = false;
     
     function gerarCalendario(mes, ano, turmas) {
         const diasDoMes = new Date(ano, mes + 1, 0).getDate(); // Número de dias do mês
@@ -54,45 +56,48 @@ document.addEventListener('DOMContentLoaded', function () {
     function calcularSalario(turmas, mes, ano) {
         let salarioTotal = 0;
         let salarioDetalhado = '';
-
+    
         const diasTrabalhados = new Set(); // Para calcular transporte, dia único em que ele esteve na escola
-
+    
         turmas.forEach(turma => {
-            const tipoTurma = turma.aide_id === null ? 'solo' : (turma.professor_responsavel_id === parseInt(professorId) ? 'com_aide' : 'como_aide');
             const horasPorDia = turma.horas_por_dia;
             const diasSemana = turma.dias_semana;
             let salarioPorTurma = 0; 
-
+    
+            // Define o salário por hora baseado no tipo da turma e se o professor é sênior
+            let salarioHora;
+            if (turma.nome === "ENGLISH") {
+                salarioHora = senior ? 75 : 60; // Salário específico para turmas de inglês
+            } else if (turma.aide_id === null) {
+                salarioHora = senior ? 100 : 75; // Sem aide
+            } else if (turma.professor_responsavel_id === parseInt(professorId)) {
+                salarioHora = senior ? 75 : 60; // Com aide, dependendo se é sênior
+            } else {
+                salarioHora = 40; // Como aide, salário fixo
+            }
+    
             // Verificar cada dia do mês
             const diasDoMes = new Date(ano, mes + 1, 0).getDate();
             for (let dia = 1; dia <= diasDoMes; dia++) {
                 const dataAtual = new Date(ano, mes, dia);
                 const diaSemana = dataAtual.toLocaleDateString('pt-BR', { weekday: 'long' }).toLowerCase();
-
+    
                 if (diasSemana.includes(diaSemana)) {
                     diasTrabalhados.add(dia); // Marca o dia trabalhado para cálculo de transporte
-
+    
                     // Cálculo do salário por turma
-                    if (tipoTurma === 'solo') {
-                        salarioPorTurma += horasPorDia * 100;
-                        salarioTotal += horasPorDia * 100; // 100 reais por hora de turma solo
-                    } else if (tipoTurma === 'com_aide') {
-                        salarioTotal += horasPorDia * 75; // 75 reais por hora de turma com aide
-                        salarioPorTurma += horasPorDia * 75;
-                    } else if (tipoTurma === 'como_aide') {
-                        salarioTotal += horasPorDia * 50; // 50 reais por hora como aide
-                        salarioPorTurma += horasPorDia * 50;
-                    }
+                    salarioPorTurma += horasPorDia * salarioHora;
+                    salarioTotal += horasPorDia * salarioHora;
                 }
             }
-            salarioDetalhado += `Turma ${turma.nome} (solo) - ${horasPorDia} horas: R$ ${salarioPorTurma}<br>`;
+            salarioDetalhado += `Turma ${turma.nome} - ${horasPorDia} horas: R$ ${salarioPorTurma}<br>`;
         });
-
+    
         // Cálculo de transporte
         const transporte = diasTrabalhados.size * 20;
         salarioTotal += transporte;
         salarioDetalhado += `Transporte: ${diasTrabalhados.size} dias: R$ ${transporte}<br>`;
-
+    
         return { salarioTotal, salarioDetalhado };
     }
     
@@ -100,7 +105,8 @@ document.addEventListener('DOMContentLoaded', function () {
     fetch(professorUrl)
         .then(response => response.json())
         .then(data => {
-            const { nome_completo, data_nascimento, data_entrada, telefone, chaves } = data;
+            const { nome_completo, data_nascimento, data_entrada, telefone, chaves, is_senior } = data;
+            senior = is_senior;
             detalhesProfessor.innerHTML = `
                 <h2>${nome_completo}</h2>
                 <p><strong>Data de Nascimento:</strong> ${data_nascimento}</p>
@@ -146,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if(comAide.length){
             turmasComAide.innerHTML = '<h3>Turmas com Aide</h3>';
             comAide.forEach(turma => {
-                turmasComAide.innerHTML += `<p>${turma.nome} - ${turma.horario} (Aide: ${turma.aide_id})</p>`;
+                turmasComAide.innerHTML += `<p>${turma.nome} - ${turma.horario}`;
             });
         }
 
