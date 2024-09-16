@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const turmaFiltro = document.getElementById('turma-filtro');
     const resultadosLista = document.getElementById('resultados-lista');
     const loadingSpinner = document.getElementById('loading-spinner'); // Seleciona o spinner
+    const alunoTurmaFiltro = document.getElementById('aluno-turma-filtro');
 
     const menuAlunos = document.getElementById('menu-alunos');
     const menuProfessores = document.getElementById('menu-professores');
@@ -71,26 +72,30 @@ document.addEventListener('DOMContentLoaded', function() {
         mostrarSpinner();
         const offset = (page - 1) * limit;
         const filter = alunoFiltro.value.trim().toLowerCase();
+        const turmaSelecionada = alunoTurmaFiltro.value; // Captura o valor selecionado no filtro de turma
+        console.log({turmaSelecionada});
     
-        // Definir a URL base para a requisição
         let url = `${alunosUrl}?limit=${limit}&offset=${offset}`;
     
-        // Adicionar o filtro de nome do aluno se preenchido
         if (filter) {
             url += `&filtro=${filter}`;
         }
     
-        // Adicionar o parâmetro experimental se o checkbox estiver marcado
+        if (turmaSelecionada) {
+            console.log({turmaSelecionada});
+            url += `&nome_da_turma=${encodeURIComponent(turmaSelecionada)}`; // Adiciona o filtro de turma à URL
+        }
+    
         if (filtroExperimental.checked) {
             url += `&experimental=true`;
         }
-
-        // Adicionar o parâmetro de ex-alunos se o checkbox estiver marcado
+    
         if (filtroExAlunos.checked) {
             url += `&data_saida=true`;
         }
     
         try {
+            console.log({url});
             const response = await fetch(url);
             const data = await response.json();
             alunos = data.data; // Supondo que a resposta tem uma chave "data"
@@ -103,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } finally {
             esconderSpinner();
         }
-    }
+    }    
 
     // Função para atualizar a exibição da paginação
     function atualizarPaginacao() {
@@ -296,6 +301,10 @@ document.addEventListener('DOMContentLoaded', function() {
     alunoFiltro.addEventListener('input', filtrarResultados);
     professorFiltro.addEventListener('input', filtrarResultados);
     turmaFiltro.addEventListener('change', filtrarResultados);
+    alunoTurmaFiltro.addEventListener('change', function() {
+        currentPage = 1; // Reseta para a primeira página sempre que o filtro de turma mudar
+        carregarAlunos(currentPage); // Chama a função de carregar alunos com a nova turma selecionada
+    });
 
     // Adicionar evento ao checkbox de "alunos experimentais" e "ex-alunos"
     filtroExperimental.addEventListener('change', recarregarDados);

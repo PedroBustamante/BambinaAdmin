@@ -26,9 +26,18 @@
             <div id="filtro-alunos" class="filtro-grupo" style="display:none;">
                 <h2>Filtrar por Aluno</h2>
                 <div class="filtro-aluno-container">
-                    <label for="aluno-filtro">Nome do Aluno:</label>
+                    <label for="aluno-filtro">Nome:</label>
                     <input type="text" id="aluno-filtro" placeholder="Digite o nome do aluno">
-                    
+                    <select id="aluno-turma-filtro">
+                        <option value="">Todas as Turmas</option>
+                        <option value="PLAY">PLAY</option>
+                        <option value="ACT">ACT</option>
+                        <option value="PERFORM">PERFORM</option>
+                        <option value="DELIGHT">DELIGHT</option>
+                        <option value="LEARN">LEARN</option>
+                        <option value="ENGLISH">ENGLISH</option>
+                        <option value="TRYOUT">TRYOUT</option>
+                    </select>
                     <div class="filtro-check-box-container">
                         <label for="filtro-experimental">Experimental</label>
                         <input type="checkbox" id="filtro-experimental">  
