@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const alunoFiltro = document.getElementById('aluno-filtro');
-    const filtroExperimental = document.getElementById('filtro-experimental'); // Seleciona o checkbox
+    const filtroExperimental = document.getElementById('filtro-experimental'); // Seleciona o checkbox de experimental
+    const filtroExAlunos = document.getElementById('filtro-ex-alunos'); // Seleciona o checkbox de ex-alunos
     const professorFiltro = document.getElementById('professor-filtro');
     const turmaFiltro = document.getElementById('turma-filtro');
     const resultadosLista = document.getElementById('resultados-lista');
@@ -16,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const btnPrev = document.getElementById('btn-prev');
     const btnNext = document.getElementById('btn-next');
     const paginationInfo = document.getElementById('pagination-info');
-    const paginationControls = document.getElementById('pagination-controls')
+    const paginationControls = document.getElementById('pagination-controls');
 
     const mainContent = document.querySelector('main');
     const btnAdd = document.getElementById('btn-add'); // Seleciona o botão de adicionar
@@ -32,7 +33,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // URLs dos endpoints
     const alunosUrl = `https://bambina-admin-back.vercel.app/alunos`;
-    const alunosExperimentalUrl = `https://bambina-admin-back.vercel.app/alunos/experimental`;
     const professoresUrl = `https://bambina-admin-back.vercel.app/professores`;
     const turmasUrl = `https://bambina-admin-back.vercel.app/turmas`;
 
@@ -46,9 +46,8 @@ document.addEventListener('DOMContentLoaded', function() {
         loadingSpinner.classList.add('hidden');
     }
 
-    // Função para carregar alunos com base no filtro de experimentais
-     // Função de debounce
-     function debounce(func, delay) {
+    // Função de debounce
+    function debounce(func, delay) {
         return function() {
             const context = this;
             const args = arguments;
@@ -57,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
-    // Função para carregar alunos com base no filtro de experimentais, paginação e filtro
+    // Função para carregar alunos com base no filtro de experimentais, ex-alunos, paginação e filtro
     async function carregarAlunos(page = 1) {
         mostrarSpinner();
         const offset = (page - 1) * limit;
@@ -66,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Definir a URL base para a requisição
         let url = `${alunosUrl}?limit=${limit}&offset=${offset}`;
     
-        // Adicionar o filtro se estiver preenchido
+        // Adicionar o filtro de nome do aluno se preenchido
         if (filter) {
             url += `&filtro=${filter}`;
         }
@@ -75,11 +74,16 @@ document.addEventListener('DOMContentLoaded', function() {
         if (filtroExperimental.checked) {
             url += `&experimental=true`;
         }
+
+        // Adicionar o parâmetro de ex-alunos se o checkbox estiver marcado
+        if (filtroExAlunos.checked) {
+            url += `&data_saida=true`;
+        }
     
         try {
             const response = await fetch(url);
             const data = await response.json();
-            alunos = data.data; // Supondo que a resposta tem uma chave "alunos"
+            alunos = data.data; // Supondo que a resposta tem uma chave "data"
             totalResults = data.total; // Supondo que a resposta tem uma chave "total"
             atualizarPaginacao(); // Atualiza a paginação conforme os resultados
             filtrarResultados();  // Atualiza os resultados filtrados
@@ -89,7 +93,6 @@ document.addEventListener('DOMContentLoaded', function() {
             esconderSpinner();
         }
     }
-    
 
     // Função para atualizar a exibição da paginação
     function atualizarPaginacao() {
@@ -126,8 +129,9 @@ document.addEventListener('DOMContentLoaded', function() {
         carregarAlunos(currentPage);
     });
 
-    // Chamar a função carregarAlunos ao mostrar a página
-    window.addEventListener('pageshow', function(event) {
+    // Recarregar alunos ao modificar o filtro de ex-alunos
+    filtroExAlunos.addEventListener('change', function() {
+        currentPage = 1;
         carregarAlunos(currentPage);
     });
 
@@ -225,7 +229,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (filtroAlunos.style.display === 'block') {
             alunos.forEach(aluno => {
-                // const alunoNome = aluno.nome.toLowerCase();
                 const alunoTurmas = aluno.ids_turmas.map(id => turmas.find(turma => turma.id === id).nome);
                 resultados.push({
                     id: aluno.id,
@@ -233,7 +236,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     nome: aluno.nome,
                     detalhes: `Turmas: ${alunoTurmas.join(', ')}`
                 });
-
             });
         } else if (filtroProfessores.style.display === 'block') {
             professores.forEach(professor => {
@@ -241,6 +243,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (professorNome.includes(professorFiltroValue) || professorFiltroValue === '') {
                     resultados.push({
+                        id: professor.id,
                         tipo: 'Professor',
                         nome: professor.nome_completo,
                         detalhes: `Telefone: ${professor.telefone}`
@@ -269,6 +272,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <p>${r.detalhes}</p>
                 ${r.tipo === 'Aluno' ? `<button onclick="location.href='alunos/aluno.html?id=${r.id}'">Ver Detalhes</button>` : ''}
                 ${r.tipo === 'Turma' ? `<button onclick="location.href='turma.html?id=${r.id}'">Ver Detalhes</button>` : ''}
+                ${r.tipo === 'Professor' ? `<button onclick="location.href='professores/professor.html?id=${r.id}'">Ver Detalhes</button>` : ''}
             </div>
         `).join('') : '<p>Nenhum resultado encontrado.</p>';
     }
@@ -278,8 +282,9 @@ document.addEventListener('DOMContentLoaded', function() {
     professorFiltro.addEventListener('input', filtrarResultados);
     turmaFiltro.addEventListener('change', filtrarResultados);
 
-    // Adicionar evento ao checkbox de "alunos experimentais"
+    // Adicionar evento ao checkbox de "alunos experimentais" e "ex-alunos"
     filtroExperimental.addEventListener('change', recarregarDados);
+    filtroExAlunos.addEventListener('change', recarregarDados);
 
     // Inicialmente, o conteúdo principal fica oculto
     mainContent.classList.add('hidden');

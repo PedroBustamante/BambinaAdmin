@@ -337,11 +337,22 @@ button[id="canelar"]:hover {
     align-items: center;
 }
 
-.filtro-experimental-container {
-    margin-left: 40px; /* Espaçamento entre o campo de nome e o checkbox */
+.filtro-check-box-container {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 40px; /* Espaçamento inicial */
 }
 
-#filtro-experimental {
-    transform: scale(3); /* Aumenta o tamanho do checkbox */
-    margin-left: 10px; /* Espaço entre o texto e o checkbox */
+.filtro-check-box-container label {
+    margin-right: 10px; /* Espaço entre o texto e o checkbox */
+    font-size: 1.2em; /* Ajustar o tamanho da fonte para combinar com o checkbox maior */
+}
+
+#filtro-experimental, #filtro-ex-alunos {
+    transform: scale(1.5); /* Aumenta o tamanho dos checkboxes de forma mais sutil */
+    margin-right: 20px; /* Espaço entre os dois checkboxes */
+}
+
+#filtro-ex-alunos {
+    margin-left: 10px; /* Espaço entre o texto do "Ex-Alunos" e o checkbox */
 }
