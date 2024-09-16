@@ -56,6 +56,16 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
+    function atualizarTotalResultados() {
+        const totalResultadosSpan = document.getElementById('total-resultados');
+        console.log(filtroAlunos.style.display);
+        if (filtroAlunos.style.display !== 'none') {
+            totalResultadosSpan.textContent = `(${totalResults} resultados)`;
+        } else {
+            totalResultadosSpan.textContent = ''; // Limpa se não estamos mostrando alunos
+        }
+    }
+
     // Função para carregar alunos com base no filtro de experimentais, ex-alunos, paginação e filtro
     async function carregarAlunos(page = 1) {
         mostrarSpinner();
@@ -87,6 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
             totalResults = data.total; // Supondo que a resposta tem uma chave "total"
             atualizarPaginacao(); // Atualiza a paginação conforme os resultados
             filtrarResultados();  // Atualiza os resultados filtrados
+            atualizarTotalResultados();
         } catch (error) {
             console.error('Erro ao carregar alunos:', error);
         } finally {
@@ -180,6 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
         selecionarFiltro('alunos');
         btnAdd.textContent = 'Adicionar Aluno';
         btnAdd.classList.remove('hidden');
+        atualizarTotalResultados();
         btnAdd.onclick = function() {
             window.location.href = 'alunos/adicionarAluno.html';
         };
@@ -190,6 +202,7 @@ document.addEventListener('DOMContentLoaded', function() {
         selecionarFiltro('professores');
         btnAdd.textContent = 'Adicionar Professor';
         btnAdd.classList.remove('hidden');
+        atualizarTotalResultados();
         btnAdd.onclick = function() {
             window.location.href = 'professores/adicionarProfessor.html';
         };
@@ -200,6 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
         selecionarFiltro('turmas');
         btnAdd.textContent = 'Adicionar Turma';
         btnAdd.classList.remove('hidden');
+        atualizarTotalResultados();
         btnAdd.onclick = function() {
             window.location.href = 'adicionarTurma.html';
         };
