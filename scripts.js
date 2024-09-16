@@ -208,6 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Função para selecionar e exibir o filtro correto
     function selecionarFiltro(filtro) {
         filtroAlunos.style.display = filtro === 'alunos' ? 'block' : 'none';
+        paginationControls.style.display = filtro === 'alunos' ? 'block' : 'none';
         filtroProfessores.style.display = filtro === 'professores' ? 'block' : 'none';
         filtroTurmas.style.display = filtro === 'turmas' ? 'block' : 'none';
 
