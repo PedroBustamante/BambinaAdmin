@@ -88,8 +88,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     `).join('')}
                 </div>
                 <button type="button" id="adicionar-turma" disabled>Adicionar outra turma</button>
-                <button type="button" class="remover-turma" disabled>Remover última turma</button>
-                
+                <button type="button" id="remover-ultima-turma" class="hidden" disabled>Remover última turma</button>
+                 
                 <label for="telefone">Telefone:</label>
                 <input type="text" id="telefone" name="telefone" value="${handleNull(aluno.telefone)}" disabled required>
     
@@ -148,6 +148,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const salvarButton = document.getElementById('salvar-dados');
         const cancelarButton = document.getElementById('cancelar-edicao');
         const adicionarTurmaButton = document.getElementById('adicionar-turma');
+        const removerUltimaTurmaButton = document.getElementById('remover-ultima-turma');
+        const turmasContainer = document.getElementById('turmas-container');
+    
+        // Função para atualizar a visibilidade do botão "Remover última turma"
+        function atualizarVisibilidadeRemoverUltimaTurma() {
+            const totalTurmas = turmasContainer.querySelectorAll('.turma-selecionada').length;
+            if (totalTurmas > 1) {
+                removerUltimaTurmaButton.classList.remove('hidden');
+            } else {
+                removerUltimaTurmaButton.classList.add('hidden');
+            }
+        }
     
         // Habilitar edição ao clicar no botão "Editar Dados"
         editarButton.addEventListener('click', function() {
@@ -156,6 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
             salvarButton.disabled = false;
             cancelarButton.classList.remove('hidden');
             editarButton.disabled = true; // Desabilita o botão de edição enquanto a edição está ativa
+            atualizarVisibilidadeRemoverUltimaTurma(); // Atualiza a visibilidade após habilitar edição
         });
     
         // Cancelar edição e restaurar os valores originais
@@ -175,20 +188,29 @@ document.addEventListener('DOMContentLoaded', function() {
             novoSelect.required = true;
             novoSelect.innerHTML = `<option value="">Selecione uma turma</option>${turmasOptions}`;
     
-            const removerButton = document.createElement('button');
-            removerButton.type = 'button';
-            removerButton.textContent = 'Remover';
-            removerButton.classList.add('remover-turma');
-    
             novaDiv.appendChild(novoSelect);
-            novaDiv.appendChild(removerButton);
+            turmasContainer.appendChild(novaDiv);
     
-            document.getElementById('turmas-container').appendChild(novaDiv);
+            atualizarVisibilidadeRemoverUltimaTurma(); // Atualiza a visibilidade após adicionar uma turma
+        });
     
-            // Adicionar evento de remoção
-            removerButton.addEventListener('click', function() {
-                novaDiv.remove();
-            });
+        // Remover a última turma
+        removerUltimaTurmaButton.addEventListener('click', function() {
+            const totalTurmas = turmasContainer.querySelectorAll('.turma-selecionada');
+            if (totalTurmas.length > 1) {
+                totalTurmas[totalTurmas.length - 1].remove(); // Remove a última turma
+                atualizarVisibilidadeRemoverUltimaTurma(); // Atualiza a visibilidade após remover
+            }
+        });
+    
+        // Atualizar a visibilidade ao carregar os dados
+        atualizarVisibilidadeRemoverUltimaTurma();
+    
+        // Cancelar edição e restaurar os valores originais
+        cancelarButton.addEventListener('click', function() {
+            exibirDados(alunoEspecifico); // Restaura os dados originais
+            cancelarButton.classList.add('hidden'); // Esconde o botão "Cancelar Edição"
+            editarButton.disabled = false; // Reabilita o botão de edição
         });
     
         // Adicionar funcionalidade de remoção de turma já existente
