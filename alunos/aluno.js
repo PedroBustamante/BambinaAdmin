@@ -38,11 +38,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const turma = turmas.find(turma => turma.id === id);
             return `${turma.nome} (${turma.horario})`;
         }).join(', ');
-
+    
         const idade = calcularIdade(aluno.data_nascimento);
         const status = aluno.data_saida ? 'Ex Aluno' : (aluno.experimental ? 'Aluno em Período Experimental' : 'Aluno Ativo');
         const usoImagem = aluno.uso_imagem ? 'Permite uso de imagem' : 'Não permite uso de imagem';
-
+    
         detalhesAluno.innerHTML = `
             <div class="overview-content">
                 <h2>${aluno.nome}</h2>
@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <p><strong>Idade:</strong> ${idade} anos</p>
                 <p><strong>Status:</strong> ${status}</p>
                 <p><strong>Uso de Imagem:</strong> ${usoImagem}</p>
+                <p><strong>Observações:</strong> ${handleNull(aluno.observacoes)}</p> <!-- Adicionando observações -->
             </div>
         `;
     }
@@ -127,7 +128,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 <input type="text" id="alergias" name="alergias" value="${handleNull(aluno.alergias)}" disabled>
                 
                 <label for="forma_pagamento">Forma de Pagamento:</label>
-                <input type="text" id="forma_pagamento" name="forma_pagamento" value="${handleNull(aluno.forma_pagamento)}" disabled>
+                <select id="forma_pagamento" name="forma_pagamento" disabled>
+                    <option value="" ${aluno.forma_pagamento === null ? 'selected' : ''}>Selecione um</option>
+                    <option value="Parcelado" ${aluno.forma_pagamento === 'Parcelado' ? 'selected' : ''}>Parcelado</option>
+                    <option value="Semestral à vista" ${aluno.forma_pagamento === 'Semestral à vista' ? 'selected' : ''}>Semestral à vista</option>
+                    <option value="Anual" ${aluno.forma_pagamento === 'Anual' ? 'selected' : ''}>Anual</option>
+                    <option value="Outro" ${aluno.forma_pagamento === 'Outro' ? 'selected' : ''}>Outro</option>
+                </select>
                 
                 <label for="data_saida">Data de Saída:</label>
                 <input type="date" id="data_saida" name="data_saida" value="${aluno.data_saida}" disabled>
@@ -137,6 +144,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 <label for="experimental">Período Experimental:</label>
                 <input type="checkbox" id="experimental" name="experimental" ${aluno.experimental ? 'checked' : ''} disabled>
+
+                <label for="observacoes">Observações:</label>
+                <textarea id="observacoes" name="observacoes" disabled>${handleNull(aluno.observacoes)}</textarea>
     
                 <button type="button" id="editar-dados">Editar Dados</button>
                 <button type="button" id="cancelar-edicao" class="hidden">Cancelar Edição</button>
@@ -163,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
         // Habilitar edição ao clicar no botão "Editar Dados"
         editarButton.addEventListener('click', function() {
-            const inputs = document.querySelectorAll('#form-editar-aluno input, #form-editar-aluno select, #form-editar-aluno button');
+            const inputs = document.querySelectorAll('#form-editar-aluno input, #form-editar-aluno select, #form-editar-aluno button, #form-editar-aluno textarea');
             inputs.forEach(input => input.disabled = false);
             salvarButton.disabled = false;
             cancelarButton.classList.remove('hidden');
@@ -247,6 +257,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 data_saida: toNull(document.getElementById('data_saida').value) || null,
                 uso_imagem: document.getElementById('uso_imagem').checked,
                 experimental: document.getElementById('experimental').checked,
+                observacoes: toNull(document.getElementById('observacoes').value),
                 ids_turmas: turmasSelecionadas // Lista de IDs das turmas selecionadas
             };
     

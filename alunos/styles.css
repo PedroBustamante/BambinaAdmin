@@ -345,3 +345,19 @@ button[id="canelar"]:hover {
     transform: scale(3); /* Aumenta o tamanho do checkbox */
     margin-left: 10px; /* Espaço entre o texto e o checkbox */
 }
+
+textarea#observacoes {
+    width: 100%;
+    height: 100px; /* Altura padrão para telas menores */
+    resize: vertical; /* Permite que o usuário redimensione verticalmente */
+    padding: 10px;
+    box-sizing: border-box; /* Para garantir que o padding seja incluído nas dimensões totais */
+    font-size: 16px;
+}
+
+/* Estilo para telas maiores (desktop) */
+@media only screen and (min-width: 768px) {
+    textarea#observacoes {
+        height: 200px; /* Aumenta a altura nas telas maiores */
+    }
+}
