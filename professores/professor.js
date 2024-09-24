@@ -13,10 +13,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const professorUrl = `https://bambina-admin-back.vercel.app/professores/professor/${professorId}`;
     const turmasUrl = `https://bambina-admin-back.vercel.app/turmas/professor/${professorId}`;
+    const aulasExtraUrl = `https://bambina-admin-back.vercel.app/aulasExtra`;
 
     let senior = false;
-    
-    function gerarCalendario(mes, ano, turmas) {
+
+    // Função para obter aulas extras de várias turmas
+    async function obterTodasAulasExtras(turmas) {
+        const aulasExtrasPorTurma = {};
+
+        // Realiza uma chamada para cada turma
+        for (let turma of turmas) {
+            const response = await fetch(`${aulasExtraUrl}?id_turma=${turma.id}`);
+            const data = await response.json();
+            aulasExtrasPorTurma[turma.id] = data;  // Armazena as aulas extras por turma
+        }
+
+        return aulasExtrasPorTurma;
+    }
+
+    async function gerarCalendario(mes, ano, turmas, aulasExtrasPorTurma) {
         const diasDoMes = new Date(ano, mes + 1, 0).getDate(); // Número de dias do mês
         const primeiroDiaSemana = new Date(ano, mes, 1).getDay(); // Primeiro dia da semana (0=Domingo, 6=Sábado)
     
@@ -28,42 +43,52 @@ document.addEventListener('DOMContentLoaded', function () {
         for (let i = primeiroDiaSemana; i < primeiroDiaSemana + diasDoMes; i++) {
             calendarioHtml += `<th style="border: 1px solid black; padding: 5px; text-align: center;">${diasSemana[i % 7]}</th>`;
         }
-        
+    
         calendarioHtml += '</tr>';
     
-        // Adicionar linhas de turmas
-        turmas.forEach(turma => {
+        // Usando for...of para lidar com operações assíncronas
+        for (let turma of turmas) {
+            const aulasExtrasTurma = aulasExtrasPorTurma[turma.id] || []; // Usa as aulas extras armazenadas
+    
             calendarioHtml += `<tr><td style="border: 1px solid black; padding: 5px; text-align: left;">${turma.nome} - ${turma.horario}</td>`; // Nome da turma e horário
             for (let dia = 1; dia <= diasDoMes; dia++) {
                 const dataAtual = new Date(ano, mes, dia);
                 const diaSemana = dataAtual.toLocaleDateString('pt-BR', { weekday: 'long' }).toLowerCase();
-                
-                // Verifica se o dia atual é um dos dias da semana da turma
-                if (turma.dias_semana.includes(diaSemana)) {
-                    // Preenche com as horas de aula se houver aula nesse dia
-                    calendarioHtml += `<td style="border: 1px solid black; padding: 5px; text-align: center;">${turma.horas_por_dia}</td>`;
-                } else {
-                    calendarioHtml += '<td style="border: 1px solid black; padding: 5px; text-align: center;"></td>';
+                const diaAula = dataAtual.toISOString().split('T')[0]; // Formata a data como 'YYYY-MM-DD'
+    
+                let horasAula = turma.dias_semana.includes(diaSemana) ? turma.horas_por_dia : 0;
+    
+                // Verifica se há aulas extras para a data atual
+                const aulasExtrasDia = aulasExtrasTurma.filter(aulaExtra => aulaExtra.dia_aula === diaAula);
+    
+                if (aulasExtrasDia.length > 0) {
+                    aulasExtrasDia.forEach(aulaExtra => {
+                        horasAula += aulaExtra.horas_extra; // Soma as horas extras às horas regulares
+                    });
                 }
+    
+                // Preenche com as horas de aula (se houver) ou vazio
+                calendarioHtml += `<td style="border: 1px solid black; padding: 5px; text-align: center;">${horasAula > 0 ? horasAula : ''}</td>`;
             }
             calendarioHtml += '</tr>';
-        });
+        }
     
         calendarioHtml += '</table>';
         return calendarioHtml;
     }
+    
 
-    function calcularSalario(turmas, mes, ano) {
+    async function calcularSalario(turmas, mes, ano, aulasExtrasPorTurma) {
         let salarioTotal = 0;
         let salarioDetalhado = '';
-    
+
         const diasTrabalhados = new Set(); // Para calcular transporte, dia único em que ele esteve na escola
-    
-        turmas.forEach(turma => {
+
+        for (let turma of turmas) {
             const horasPorDia = turma.horas_por_dia;
             const diasSemana = turma.dias_semana;
-            let salarioPorTurma = 0; 
-    
+            let salarioPorTurma = 0;
+
             // Define o salário por hora baseado no tipo da turma e se o professor é sênior
             let salarioHora;
             if (turma.nome === "ENGLISH") {
@@ -75,32 +100,44 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 salarioHora = 40; // Como aide, salário fixo
             }
-    
+
             // Verificar cada dia do mês
             const diasDoMes = new Date(ano, mes + 1, 0).getDate();
+            const aulasExtrasTurma = aulasExtrasPorTurma[turma.id] || []; // Usa as aulas extras armazenadas
+
             for (let dia = 1; dia <= diasDoMes; dia++) {
                 const dataAtual = new Date(ano, mes, dia);
                 const diaSemana = dataAtual.toLocaleDateString('pt-BR', { weekday: 'long' }).toLowerCase();
-    
-                if (diasSemana.includes(diaSemana)) {
+                const diaAula = dataAtual.toISOString().split('T')[0];
+
+                let horasAula = diasSemana.includes(diaSemana) ? horasPorDia : 0;
+
+                // Filtrar aulas extras localmente pela data
+                const aulasExtrasDia = aulasExtrasTurma.filter(aulaExtra => aulaExtra.dia_aula === diaAula);
+
+                if (aulasExtrasDia.length > 0) {
+                    aulasExtrasDia.forEach(aulaExtra => {
+                        horasAula += aulaExtra.horas_extra;
+                    });
+                }
+
+                if (horasAula > 0) {
                     diasTrabalhados.add(dia); // Marca o dia trabalhado para cálculo de transporte
-    
-                    // Cálculo do salário por turma
-                    salarioPorTurma += horasPorDia * salarioHora;
-                    salarioTotal += horasPorDia * salarioHora;
+                    salarioPorTurma += horasAula * salarioHora;
+                    salarioTotal += horasAula * salarioHora;
                 }
             }
-            salarioDetalhado += `Turma ${turma.nome} - ${horasPorDia} horas: R$ ${salarioPorTurma}<br>`;
-        });
-    
+            salarioDetalhado += `Turma ${turma.nome}: R$ ${salarioPorTurma}<br>`;
+        }
+
         // Cálculo de transporte
         const transporte = diasTrabalhados.size * 20;
         salarioTotal += transporte;
         salarioDetalhado += `Transporte: ${diasTrabalhados.size} dias: R$ ${transporte}<br>`;
-    
+
         return { salarioTotal, salarioDetalhado };
     }
-    
+
     // Função para carregar as informações do professor
     fetch(professorUrl)
         .then(response => response.json())
@@ -123,50 +160,29 @@ document.addEventListener('DOMContentLoaded', function () {
     // Função para carregar as turmas do professor
     fetch(turmasUrl)
     .then(response => response.json())
-    .then(turmas => {
+    .then(async turmas => {
         const solo = turmas.filter(turma => turma.aide_id === null);
         const comAide = turmas.filter(turma => turma.aide_id !== null && turma.professor_responsavel_id === parseInt(professorId));
         const comoAide = turmas.filter(turma => turma.aide_id === parseInt(professorId));
-        
+
+        // Carrega todas as aulas extras para as turmas
+        const aulasExtrasPorTurma = await obterTodasAulasExtras([...solo, ...comAide, ...comoAide]);
+
         // Atualiza o calendário com as turmas
         const dataAtual = new Date();
         const mesAtual = dataAtual.getMonth();
         const anoAtual = dataAtual.getFullYear();
         
         // Gera calendários com turmas separadas
-        calendarioMesAtual.innerHTML = gerarCalendario(mesAtual, anoAtual, [...solo, ...comAide, ...comoAide]);
+        calendarioMesAtual.innerHTML = await gerarCalendario(mesAtual, anoAtual, [...solo, ...comAide, ...comoAide], aulasExtrasPorTurma);
         
         const mesAnterior = mesAtual === 0 ? 11 : mesAtual - 1;
         const anoAnterior = mesAtual === 0 ? anoAtual - 1 : anoAtual;
-        calendarioMesAnterior.innerHTML = gerarCalendario(mesAnterior, anoAnterior, [...solo, ...comAide, ...comoAide]);
-
-        // Exibir turmas solo
-        if(solo.length){
-            turmasSolo.innerHTML = '<h3>Turmas Solo</h3>';
-            solo.forEach(turma => {
-                turmasSolo.innerHTML += `<p>${turma.nome} - ${turma.horario}</p>`;
-            });
-        }
-
-        // Exibir turmas com aide
-        if(comAide.length){
-            turmasComAide.innerHTML = '<h3>Turmas com Aide</h3>';
-            comAide.forEach(turma => {
-                turmasComAide.innerHTML += `<p>${turma.nome} - ${turma.horario}`;
-            });
-        }
-
-        // Exibir turmas como aide
-        if(comoAide.length){
-            turmasComoAide.innerHTML = '<h3>Turmas como Aide</h3>';
-            comoAide.forEach(turma => {
-                turmasComoAide.innerHTML += `<p>${turma.nome} - ${turma.horario} </p>`;
-            });
-        }
+        calendarioMesAnterior.innerHTML = await gerarCalendario(mesAnterior, anoAnterior, [...solo, ...comAide, ...comoAide], aulasExtrasPorTurma);
 
         // Calcular salário para o mês atual e o mês anterior
-        const { salarioTotal: salarioAtual, salarioDetalhado: detalhesSalarioAtual } = calcularSalario([...solo, ...comAide, ...comoAide], mesAtual, anoAtual);
-        const { salarioTotal: salarioAnterior, salarioDetalhado: detalhesSalarioAnterior } = calcularSalario([...solo, ...comAide, ...comoAide], mesAnterior, anoAnterior);
+        const { salarioTotal: salarioAtual, salarioDetalhado: detalhesSalarioAtual } = await calcularSalario([...solo, ...comAide, ...comoAide], mesAtual, anoAtual, aulasExtrasPorTurma);
+        const { salarioTotal: salarioAnterior, salarioDetalhado: detalhesSalarioAnterior } = await calcularSalario([...solo, ...comAide, ...comoAide], mesAnterior, anoAnterior, aulasExtrasPorTurma);
         
         salarioMesAtual.innerHTML = `<h3>Salário Mês Atual</h3><p>${detalhesSalarioAtual}</p><p><strong>Total: R$ ${salarioAtual}</strong></p>`;
         salarioMesAnterior.innerHTML = `<h3>Salário Mês Anterior</h3><p>${detalhesSalarioAnterior}</p><p><strong>Total: R$ ${salarioAnterior}</strong></p>`;
