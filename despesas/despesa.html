@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Despesas</title>
+    <link rel="stylesheet" href="despesa.css">
+</head>
+<body>
+    <header>
+        <a href="javascript:history.back();" class="back-button">⬅ Voltar</a>
+        <h1>Despesas</h1>
+    </header>
+
+    <main>
+        <section id="filtros">
+            <h2>Filtros</h2>
+            <label for="data-inicio">Data de Início:</label>
+            <input type="date" id="data-inicio">
+
+            <label for="data-fim">Data de Fim:</label>
+            <input type="date" id="data-fim">
+
+            <label for="tipo">Tipo de Despesa:</label>
+            <select id="tipo">
+                <option value="">Todos os Tipos</option>
+                <option value="mensal">Mensal</option>
+                <option value="fixa">Fixa</option>
+                <option value="ocasional">Ocasional</option>
+                <option value="investimento">Investimento</option>
+            </select>
+
+            <label for="referencia">Referência:</label>
+            <input type="text" id="referencia" placeholder="Filtrar por referência">
+
+            <button id="btn-pesquisar" class="btn-verde">Pesquisar</button>
+
+            <!-- Spinner de carregamento -->
+            <div id="loading-spinner" class="spinner hidden"></div>
+        </section>
+
+        <section id="resultados">
+            <h2>Resultados</h2>
+            <div id="soma-total" class="hidden"></div>
+                <h3>Total de Despesas: <span id="total-valor"></span></h3>
+            </div>
+            <table id="tabela-despesas">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Valor</th>
+                        <th>Tipo</th>
+                        <th>Referência</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Resultados das despesas serão inseridos aqui -->
+                </tbody>
+            </table>
+
+            <!-- Soma total -->
+        </section>
+    </main>
+
+    <script src="despesa.js"></script>
+</body>
+</html>

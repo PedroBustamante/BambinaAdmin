@@ -1,4 +1,18 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Seleciona os botões de despesas e leads
+    const btnDespesas = document.getElementById('btn-despesas');
+    const btnLeads = document.getElementById('btn-leads');
+    
+    // Redireciona para a página de despesas
+    btnDespesas.addEventListener('click', function() {
+        window.location.href = 'despesas/despesa.html';
+    });
+    
+    // Redireciona para a página de leads
+    btnLeads.addEventListener('click', function() {
+        window.location.href = 'leads/lead.html';
+    });
+    
     const alunoFiltro = document.getElementById('aluno-filtro');
     const filtroExperimental = document.getElementById('filtro-experimental'); // Seleciona o checkbox de experimental
     const filtroExAlunos = document.getElementById('filtro-ex-alunos'); // Seleciona o checkbox de ex-alunos
@@ -59,7 +73,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function atualizarTotalResultados() {
         const totalResultadosSpan = document.getElementById('total-resultados');
-        console.log(filtroAlunos.style.display);
         if (filtroAlunos.style.display !== 'none') {
             totalResultadosSpan.textContent = `(${totalResults} resultados)`;
         } else {
@@ -73,7 +86,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const offset = (page - 1) * limit;
         const filter = alunoFiltro.value.trim().toLowerCase();
         const turmaSelecionada = alunoTurmaFiltro.value; // Captura o valor selecionado no filtro de turma
-        console.log({turmaSelecionada});
     
         let url = `${alunosUrl}?limit=${limit}&offset=${offset}`;
     
@@ -82,7 +94,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     
         if (turmaSelecionada) {
-            console.log({turmaSelecionada});
             url += `&nome_da_turma=${encodeURIComponent(turmaSelecionada)}`; // Adiciona o filtro de turma à URL
         }
     
@@ -95,7 +106,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     
         try {
-            console.log({url});
             const response = await fetch(url);
             const data = await response.json();
             alunos = data.data; // Supondo que a resposta tem uma chave "data"

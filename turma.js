@@ -74,9 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(async data => {
                 turmaEspecifica = data;
                 // Carregar professor e aide simultaneamente
-                console.log(turmaEspecifica.professor_responsavel_id);
                 professor = await carregarProfessor(turmaEspecifica.professor_responsavel_id);
-                console.log({professor});
                 aide = await carregarProfessor(turmaEspecifica.aide_id);
             }),
         fetch(alunosTurmaUrl)
