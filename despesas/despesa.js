@@ -8,6 +8,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadingSpinner = document.getElementById('loading-spinner');
     const somaTotalDiv = document.getElementById('soma-total');
     const totalValorSpan = document.getElementById('total-valor');
+    const btnAdicionarDespesa = document.getElementById('btn-adicionar-despesa');
+    const modalDespesa = document.getElementById('modal-despesa');
+    const closeModalButton = document.querySelector('.close-button');
+    const formAdicionarDespesa = document.getElementById('form-adicionar-despesa');
 
     // URL base do backend
     const apiUrl = 'https://bambina-admin-back.vercel.app/despesas';
@@ -22,6 +26,22 @@ document.addEventListener('DOMContentLoaded', function() {
         loadingSpinner.classList.add('hidden');
     }
 
+    // Função para abrir a modal
+    function abrirModal() {
+        modalDespesa.classList.remove('hidden');
+    }
+
+    // Função para fechar a modal
+    function fecharModal() {
+        modalDespesa.classList.add('hidden');
+    }
+
+    // Evento de clique para abrir a modal
+    btnAdicionarDespesa.addEventListener('click', abrirModal);
+
+    // Evento de clique para fechar a modal
+    closeModalButton.addEventListener('click', fecharModal);
+
     // Função para buscar despesas
     async function buscarDespesas() {
         const dataInicio = dataInicioInput.value;
@@ -29,24 +49,21 @@ document.addEventListener('DOMContentLoaded', function() {
         const tipo = tipoSelect.value;
         const referencia = referenciaInput.value.trim();
 
-        // Montar query string
         let query = `${apiUrl}?`;
         if (dataInicio) query += `data_inicio=${dataInicio}&`;
         if (dataFim) query += `data_fim=${dataFim}&`;
         if (tipo) query += `tipo=${tipo}&`;
         if (referencia) query += `referencia=${encodeURIComponent(referencia)}&`;
 
-        // Remover o último & se existir
         query = query.slice(0, -1);
 
         mostrarSpinner();
-        tabelaDespesas.innerHTML = '';  // Limpar a tabela antes da nova pesquisa
+        tabelaDespesas.innerHTML = '';
 
         try {
             const response = await fetch(query);
             const despesas = await response.json();
 
-            // Limpar a tabela antes de inserir os novos resultados
             tabelaDespesas.innerHTML = '';
             let somaTotal = 0;
 
@@ -56,19 +73,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            // Preencher a tabela com os resultados
             despesas.forEach(despesa => {
                 const row = tabelaDespesas.insertRow();
                 row.insertCell(0).textContent = despesa.data;
                 row.insertCell(1).textContent = `R$ ${despesa.valor.toFixed(2)}`;
                 row.insertCell(2).textContent = despesa.tipo;
                 row.insertCell(3).textContent = despesa.referencia || 'Sem referência';
-
-                // Somar o valor da despesa
                 somaTotal += despesa.valor;
             });
 
-            // Exibir a soma total
             totalValorSpan.textContent = `R$ ${somaTotal.toFixed(2)}`;
             somaTotalDiv.classList.remove('hidden');
         } catch (error) {
@@ -79,6 +92,47 @@ document.addEventListener('DOMContentLoaded', function() {
             esconderSpinner();
         }
     }
+
+    // Função para adicionar despesa
+    async function adicionarDespesa(event) {
+        event.preventDefault();
+
+        const valor = document.getElementById('valor').value;
+        const data = document.getElementById('data-despesa').value;
+        const tipo = document.getElementById('tipo-despesa').value;
+        const referencia = document.getElementById('referencia-despesa').value;
+
+        const novaDespesa = {
+            valor: parseFloat(valor),
+            data: data,
+            tipo: tipo,
+            referencia: referencia || null
+        };
+
+        try {
+            const response = await fetch(`${apiUrl}/adicionar-despesa`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(novaDespesa)
+            });
+
+            if (!response.ok) {
+                throw new Error('Erro ao adicionar despesa');
+            }
+
+            alert('Despesa adicionada com sucesso!');
+            fecharModal();
+            buscarDespesas();  // Atualiza a tabela após adicionar a despesa
+        } catch (error) {
+            console.error('Erro ao adicionar despesa:', error);
+            alert('Erro ao adicionar despesa');
+        }
+    }
+
+    // Adicionar evento ao formulário para enviar a nova despesa
+    formAdicionarDespesa.addEventListener('submit', adicionarDespesa);
 
     // Adicionar evento ao botão de pesquisar
     btnPesquisar.addEventListener('click', buscarDespesas);

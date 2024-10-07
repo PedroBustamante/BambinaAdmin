@@ -34,6 +34,7 @@
             <input type="text" id="referencia" placeholder="Filtrar por referência">
 
             <button id="btn-pesquisar" class="btn-verde">Pesquisar</button>
+            <button id="btn-adicionar-despesa" class="btn-verde">Adicionar Despesa</button>
 
             <!-- Spinner de carregamento -->
             <div id="loading-spinner" class="spinner hidden"></div>
@@ -57,10 +58,36 @@
                     <!-- Resultados das despesas serão inseridos aqui -->
                 </tbody>
             </table>
-
-            <!-- Soma total -->
         </section>
     </main>
+
+    <!-- Modal para adicionar despesas -->
+    <div id="modal-despesa" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Adicionar Nova Despesa</h2>
+            <form id="form-adicionar-despesa">
+                <label for="valor">Valor:</label>
+                <input type="number" id="valor" name="valor" step="0.01" required>
+
+                <label for="data-despesa">Data:</label>
+                <input type="date" id="data-despesa" name="data-despesa" required>
+
+                <label for="tipo-despesa">Tipo de Despesa:</label>
+                <select id="tipo-despesa" name="tipo-despesa" required>
+                    <option value="mensal">Mensal</option>
+                    <option value="fixa">Fixa</option>
+                    <option value="ocasional">Ocasional</option>
+                    <option value="investimento">Investimento</option>
+                </select>
+
+                <label for="referencia-despesa">Referência:</label>
+                <input type="text" id="referencia-despesa" name="referencia-despesa" placeholder="Ex.: Taxa de material (opcional)">
+
+                <button type="submit" class="btn-verde">Adicionar Despesa</button>
+            </form>
+        </div>
+    </div>
 
     <script src="despesa.js"></script>
 </body>
