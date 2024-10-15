@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Redireciona para a página de leads
     btnLeads.addEventListener('click', function() {
-        window.location.href = 'leads/lead.html';
+        window.location.href = 'leads/leads.html';
     });
     
     const alunoFiltro = document.getElementById('aluno-filtro');

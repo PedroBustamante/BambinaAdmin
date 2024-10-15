@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leads</title>
+    <link rel="stylesheet" href="leads.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="filter-sidebar">
+            <h2>Filtrar Leads</h2>
+            <form id="filter-form">
+                <label for="nome_responsavel">Nome do Responsável:</label>
+                <input type="text" id="nome_responsavel" name="nome_responsavel">
+
+                <label for="nome_aluno">Nome do Aluno:</label>
+                <input type="text" id="nome_aluno" name="nome_aluno">
+
+                <label for="telefone">Telefone:</label>
+                <input type="text" id="telefone" name="telefone">
+
+                <label for="origem">Origem:</label>
+                <select id="origem" name="origem">
+                    <option value="">Selecione</option>
+                    <option value="indicação">Indicação</option>
+                    <option value="instagram">Instagram</option>
+                    <option value="anúncio">Anúncio</option>
+                    <option value="visita">Visita</option>
+                    <option value="Julia">Julia</option>
+                    <option value="outros">Outros</option>
+                </select>
+
+                <label for="status">Status:</label>
+                <select id="status" name="status">
+                    <option value="">Selecione</option>
+                    <option value="aguardando resposta">Aguardando Resposta</option>
+                    <option value="não tem interesse">Não tem Interesse</option>
+                    <option value="entrar em contato em data específica">Entrar em Contato em Data Específica</option>
+                    <option value="experimental agendada">Experimental Agendada</option>
+                    <option value="problema de logística">Problema de Logística</option>
+                </select>
+
+                <label for="ex_aluno">Ex-Aluno:</label>
+                <input type="checkbox" id="ex_aluno" name="ex_aluno">
+
+                <label for="colonia_ferias">Colônia de Férias:</label>
+                <input type="checkbox" id="colonia_ferias" name="colonia_ferias">
+
+                <button type="button" id="search-button">Pesquisar</button>
+            </form>
+        </aside>
+        <section class="results">
+            <h2>Resultados dos Leads</h2>
+            <div id="loading-spinner" class="spinner hidden"></div>        
+            <div id="leads-results">
+                <!-- Resultados dos leads serão exibidos aqui -->
+            </div>
+        </section>
+    </div>
+
+    <script src="leads.js"></script>
+</body>
+</html>
