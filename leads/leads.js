@@ -4,12 +4,7 @@ document.getElementById('search-button').addEventListener('click', async () => {
     const telefone = document.getElementById('telefone').value;
     const origem = document.getElementById('origem').value;
     const status = document.getElementById('status').value;
-    const ex_aluno = document.getElementById('ex_aluno').checked;
-    const colonia_ferias = document.getElementById('colonia_ferias').checked;
-
     // Convertendo os valores booleanos em string para os parâmetros da URL
-    const ex_aluno_param = ex_aluno ? 'true' : 'false';
-    const colonia_ferias_param = colonia_ferias ? 'true' : 'false';
 
     const params = new URLSearchParams({
         nome_responsavel,
@@ -17,8 +12,6 @@ document.getElementById('search-button').addEventListener('click', async () => {
         telefone,
         origem,
         status,
-        ex_aluno: ex_aluno_param,
-        colonia_ferias: colonia_ferias_param
     });
 
     // Mostrar a roda de carregamento
@@ -45,8 +38,9 @@ document.getElementById('search-button').addEventListener('click', async () => {
         document.getElementById('leads-results').style.display = 'block'; // Mostrar os resultados
     }
 });
+    
 
-// Função para exibir os leads retornados (apenas 4 informações: nome do aluno, nome do responsável, telefone e status)
+// Função para exibir os leads retornados com botão "Ver Detalhes"
 function displayLeads(leads) {
     const leadsResults = document.getElementById('leads-results');
     leadsResults.innerHTML = ''; // Limpa os resultados anteriores
@@ -66,7 +60,66 @@ function displayLeads(leads) {
             <p><strong>Responsável:</strong> ${lead.nome_responsavel || 'Sem Responsável'}</p>
             <p><strong>Telefone:</strong> ${lead.telefone}</p>
             <p><strong>Status:</strong> ${lead.status_aluno}</p>
+            <button class="view-details" data-id="${lead.id}">Ver Detalhes</button>
         `;
         leadsResults.appendChild(leadItem);
     });
+
+    // Adiciona event listener aos botões "Ver Detalhes"
+    document.querySelectorAll('.view-details').forEach(button => {
+        button.addEventListener('click', () => {
+            const leadId = button.getAttribute('data-id');
+            window.location.href = `/leads/lead.html?id=${leadId}`;
+        });
+    });
 }
+
+// Abrir/Fechar Modal para adicionar leads
+const modal = document.getElementById('add-lead-modal');
+const addLeadButton = document.getElementById('add-lead-button');
+const closeButton = document.querySelector('.close-button');
+
+addLeadButton.addEventListener('click', () => {
+    modal.classList.remove('hidden');
+    modal.style.display = 'block';
+});
+
+closeButton.addEventListener('click', () => {
+    modal.style.display = 'none';
+});
+
+// Adicionar um novo lead (a partir da modal)
+document.getElementById('add-lead-submit').addEventListener('click', async () => {
+    const nome_responsavel = document.getElementById('modal-nome-responsavel').value;
+    const nome_aluno = document.getElementById('modal-nome-aluno').value;
+    const telefone = document.getElementById('modal-telefone').value;
+    const origem = document.getElementById('modal-origem').value;
+    const status = document.getElementById('modal-status').value;
+
+    const novoLead = {
+        nome_responsavel,
+        nome_aluno,
+        telefone,
+        origem_aluno: origem,
+        status_aluno: status,
+    };
+
+    try {
+        const response = await fetch('https://bambina-admin-back.vercel.app/leads', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(novoLead)
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro ao adicionar lead');
+        }
+
+        alert('Lead adicionado com sucesso!');
+        modal.style.display = 'none'; // Fecha a modal após adicionar
+    } catch (error) {
+        console.error('Erro ao adicionar lead:', error);
+    }
+});
