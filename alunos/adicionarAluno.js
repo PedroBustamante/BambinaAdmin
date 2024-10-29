@@ -64,7 +64,6 @@ document.addEventListener('DOMContentLoaded', function() {
             data_ingresso: toNull(document.getElementById('data_ingresso').value),
             data_saida: toNull(document.getElementById('data_saida').value),
             uso_imagem: document.getElementById('uso_imagem').checked,
-            experimental: document.getElementById('experimental').checked,
             ids_turmas: turmasSelecionadas // Lista de IDs das turmas selecionadas
         };
 
