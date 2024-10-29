@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const alunoFiltro = document.getElementById('aluno-filtro');
     const filtroExAlunos = document.getElementById('filtro-ex-alunos'); // Seleciona o checkbox de ex-alunos
+    const filtroInadimplentes = document.getElementById('filtro-inadimplentes'); // Seleciona o checkbox de inadimplente
     const professorFiltro = document.getElementById('professor-filtro');
     const turmaFiltro = document.getElementById('turma-filtro');
     const resultadosLista = document.getElementById('resultados-lista');
@@ -100,12 +101,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (filtroExAlunos.checked) {
             url += `&data_saida=true`;
         }
+
+        if (filtroInadimplentes.checked){
+            url =`${alunosUrl}/inadimplentes`
+        }
     
         try {
-            console.log({url});
             const response = await fetch(url);
             const data = await response.json();
-            console.log({data});
             alunos = data.data; // Supondo que a resposta tem uma chave "data"
             totalResults = data.total; // Supondo que a resposta tem uma chave "total"
             atualizarPaginacao(); // Atualiza a paginação conforme os resultados
@@ -149,6 +152,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Recarregar alunos ao modificar o filtro de ex-alunos
     filtroExAlunos.addEventListener('change', function() {
+        currentPage = 1;
+        carregarAlunos(currentPage);
+    });
+
+    filtroInadimplentes.addEventListener('change', function() {
         currentPage = 1;
         carregarAlunos(currentPage);
     });
@@ -311,6 +319,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     filtroExAlunos.addEventListener('change', recarregarDados);
+    filtroInadimplentes.addEventListener('change', recarregarDados);
 
     // Inicialmente, o conteúdo principal fica oculto
     mainContent.classList.add('hidden');
