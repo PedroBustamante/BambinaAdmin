@@ -348,11 +348,6 @@ button[id="canelar"]:hover {
     font-size: 1.2em; /* Ajustar o tamanho da fonte para combinar com o checkbox maior */
 }
 
-#filtro-experimental, #filtro-ex-alunos {
-    transform: scale(1.5); /* Aumenta o tamanho dos checkboxes de forma mais sutil */
-    margin-right: 20px; /* Espaço entre os dois checkboxes */
-}
-
 #filtro-ex-alunos {
     margin-left: 10px; /* Espaço entre o texto do "Ex-Alunos" e o checkbox */
 }

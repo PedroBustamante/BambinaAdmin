@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }).join(', ');
     
         const idade = calcularIdade(aluno.data_nascimento);
-        const status = aluno.data_saida ? 'Ex Aluno' : (aluno.experimental ? 'Aluno em Período Experimental' : 'Aluno Ativo');
+        const status = aluno.data_saida ? 'Ex Aluno' : 'Aluno Ativo';
         const usoImagem = aluno.uso_imagem ? 'Permite uso de imagem' : 'Não permite uso de imagem';
     
         detalhesAluno.innerHTML = `
@@ -141,9 +141,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 <label for="uso_imagem">Permite Uso de Imagem:</label>
                 <input type="checkbox" id="uso_imagem" name="uso_imagem" ${aluno.uso_imagem ? 'checked' : ''} disabled>
-                
-                <label for="experimental">Período Experimental:</label>
-                <input type="checkbox" id="experimental" name="experimental" ${aluno.experimental ? 'checked' : ''} disabled>
 
                 <label for="observacoes">Observações:</label>
                 <textarea id="observacoes" name="observacoes" disabled>${handleNull(aluno.observacoes)}</textarea>
@@ -256,7 +253,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 data_ingresso: toNull(document.getElementById('data_ingresso').value),
                 data_saida: toNull(document.getElementById('data_saida').value) || null,
                 uso_imagem: document.getElementById('uso_imagem').checked,
-                experimental: document.getElementById('experimental').checked,
                 observacoes: toNull(document.getElementById('observacoes').value),
                 ids_turmas: turmasSelecionadas // Lista de IDs das turmas selecionadas
             };

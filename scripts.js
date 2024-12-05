@@ -14,8 +14,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     const alunoFiltro = document.getElementById('aluno-filtro');
-    const filtroExperimental = document.getElementById('filtro-experimental'); // Seleciona o checkbox de experimental
     const filtroExAlunos = document.getElementById('filtro-ex-alunos'); // Seleciona o checkbox de ex-alunos
+    const filtroInadimplentes = document.getElementById('filtro-inadimplentes'); // Seleciona o checkbox de inadimplente
     const professorFiltro = document.getElementById('professor-filtro');
     const turmaFiltro = document.getElementById('turma-filtro');
     const resultadosLista = document.getElementById('resultados-lista');
@@ -82,6 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Função para carregar alunos com base no filtro de experimentais, ex-alunos, paginação e filtro
     async function carregarAlunos(page = 1) {
+        console.log("entrou aqui");
         mostrarSpinner();
         const offset = (page - 1) * limit;
         const filter = alunoFiltro.value.trim().toLowerCase();
@@ -97,12 +98,12 @@ document.addEventListener('DOMContentLoaded', function() {
             url += `&nome_da_turma=${encodeURIComponent(turmaSelecionada)}`; // Adiciona o filtro de turma à URL
         }
     
-        if (filtroExperimental.checked) {
-            url += `&experimental=true`;
-        }
-    
         if (filtroExAlunos.checked) {
             url += `&data_saida=true`;
+        }
+
+        if (filtroInadimplentes.checked){
+            url =`${alunosUrl}/inadimplentes`
         }
     
         try {
@@ -149,14 +150,13 @@ document.addEventListener('DOMContentLoaded', function() {
         carregarAlunos(currentPage);
     }, 300)); // 300ms de atraso
 
-    // Recarregar alunos ao modificar o filtro experimental
-    filtroExperimental.addEventListener('change', function() {
+    // Recarregar alunos ao modificar o filtro de ex-alunos
+    filtroExAlunos.addEventListener('change', function() {
         currentPage = 1;
         carregarAlunos(currentPage);
     });
 
-    // Recarregar alunos ao modificar o filtro de ex-alunos
-    filtroExAlunos.addEventListener('change', function() {
+    filtroInadimplentes.addEventListener('change', function() {
         currentPage = 1;
         carregarAlunos(currentPage);
     });
@@ -251,11 +251,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Filtrar e exibir resultados
     function filtrarResultados() {
+        console.log("filtro");
         const alunoFiltroValue = alunoFiltro.value.toLowerCase();
         const professorFiltroValue = professorFiltro.value.toLowerCase();
         const turmaFiltroValue = turmaFiltro.value;
 
         let resultados = [];
+        console.log({alunos});
 
         if (filtroAlunos.style.display === 'block') {
             alunos.forEach(aluno => {
@@ -316,9 +318,8 @@ document.addEventListener('DOMContentLoaded', function() {
         carregarAlunos(currentPage); // Chama a função de carregar alunos com a nova turma selecionada
     });
 
-    // Adicionar evento ao checkbox de "alunos experimentais" e "ex-alunos"
-    filtroExperimental.addEventListener('change', recarregarDados);
     filtroExAlunos.addEventListener('change', recarregarDados);
+    filtroInadimplentes.addEventListener('change', recarregarDados);
 
     // Inicialmente, o conteúdo principal fica oculto
     mainContent.classList.add('hidden');

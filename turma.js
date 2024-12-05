@@ -31,8 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const professorNome = professor ? professor.nome_completo : 'Sem professor';
         const aideNome = aide ? aide.nome_completo : 'Sem Aide';
         const totalAlunos = alunos.length;
-        const alunosMatriculados = alunos.filter(aluno => !aluno.experimental).length;
-        const alunosExperimentais = alunos.filter(aluno => aluno.experimental).length;
+        const alunosMatriculados = alunos.length;
 
         detalhesTurma.innerHTML = `
             <div class="overview-content">
@@ -42,7 +41,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 <p><strong>Aide:</strong> ${aideNome}</p>
                 <p><strong>Total de Alunos:</strong> ${totalAlunos}</p>
                 <p><strong>Alunos Matriculados:</strong> ${alunosMatriculados}</p>
-                <p><strong>Alunos em Período Experimental:</strong> ${alunosExperimentais}</p>
             </div>
         `;
     }
