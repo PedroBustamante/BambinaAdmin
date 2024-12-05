@@ -92,9 +92,13 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             calendarioHtml += '</tr>';
         }
-    
+        
+        const uniqueArray = turmasSubstituicao.filter((value, index, self) => {
+            return self.findIndex(v => v.id === value.id) === index;
+          });
+          console.log(uniqueArray); // [{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }]
         // Processar turmas de substituição
-        for (let turma of turmasSubstituicao) {
+        for (let turma of uniqueArray) {
             calendarioHtml += `<tr><td style="border: 1px solid black; padding: 5px; text-align: left;">${turma.nome} (Substituição)</td>`;
             for (let dia = 1; dia <= diasDoMes; dia++) {
                 const dataAtual = new Date(ano, mes, dia);
