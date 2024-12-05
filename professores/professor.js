@@ -195,9 +195,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const uniqueArray = turmasSubstituicao.filter((value, index, self) => {
             return self.findIndex(v => v.id === value.id) === index;
-          });
-
-          console.log(uniqueArray);
+        });
 
         // Processar turmas de substituição
         for (let turma of uniqueArray) {
