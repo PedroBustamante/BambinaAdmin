@@ -96,7 +96,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const uniqueArray = turmasSubstituicao.filter((value, index, self) => {
             return self.findIndex(v => v.id === value.id) === index;
           });
-          console.log(uniqueArray); // [{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }]
         // Processar turmas de substituição
         for (let turma of uniqueArray) {
             calendarioHtml += `<tr><td style="border: 1px solid black; padding: 5px; text-align: left;">${turma.nome} (Substituição)</td>`;
@@ -194,8 +193,14 @@ document.addEventListener('DOMContentLoaded', function () {
             salarioDetalhado += `Turma ${turma.nome}: R$ ${salarioPorTurma}<br>`;
         }
 
+        const uniqueArray = turmasSubstituicao.filter((value, index, self) => {
+            return self.findIndex(v => v.id === value.id) === index;
+          });
+
+          console.log(uniqueArray);
+
         // Processar turmas de substituição
-        for (let turma of turmasSubstituicao) {
+        for (let turma of uniqueArray) {
             let salarioPorTurma = 0;
             const diasDoMes = new Date(ano, mes + 1, 0).getDate();
         
