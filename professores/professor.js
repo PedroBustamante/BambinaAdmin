@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const foiSubstituidoNoDia = substituicoes.some(sub => sub.id_turma === turma.id && sub.id_professor_substituido == professorId && sub.data_mudanca === diaAula);
                 const estaSubstituindoNoDia = substituicoes.some(sub => sub.id_turma === turma.id && sub.id_professor_substituto == professorId && sub.data_mudanca === diaAula);
 
-                if (foiSubstituidoNoDia) {
+                if (foiSubstituidoNoDia && !estaSubstituindoNoDia) {
                     continue;  // Ignora o dia em que o professor foi substituído
                 }
 
