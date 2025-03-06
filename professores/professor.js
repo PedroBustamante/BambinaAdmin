@@ -98,7 +98,8 @@ document.addEventListener('DOMContentLoaded', function () {
           });
         // Processar turmas de substituição
         for (let turma of uniqueArray) {
-            calendarioHtml += `<tr><td style="border: 1px solid black; padding: 5px; text-align: left;">${turma.nome} (Substituição)</td>`;
+            const aulasExtrasTurma = aulasExtrasPorTurma[turma.id] || [];
+            calendarioHtml += `<tr><td style="border: 1px solid black; padding: 5px; text-align: left;">${turma.nome} - ${turma.horario}</td>`;
             for (let dia = 1; dia <= diasDoMes; dia++) {
                 const dataAtual = new Date(ano, mes, dia);
                 const diaAula = dataAtual.toISOString().split('T')[0];
@@ -106,10 +107,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 const estaSubstituindoNoDia = substituicoes.some(sub => sub.id_turma === turma.id && sub.id_professor_substituto == professorId && sub.data_mudanca === diaAula);
     
                 let style = '';
-    
+                let horasAula = turma.horas_por_dia;
+
+                const aulasExtrasDia = aulasExtrasTurma.filter(aulaExtra => aulaExtra.dia_aula === diaAula);
+                if (aulasExtrasDia.length > 0) {
+                    aulasExtrasDia.forEach(aulaExtra => {
+                        horasAula += aulaExtra.horas_extra;
+                    });
+                }
+                
                 if (estaSubstituindoNoDia) {
                     style = 'background-color: green; color: white;';
-                    calendarioHtml += `<td style="border: 1px solid black; padding: 5px; text-align: center; ${style}">${turma.horas_por_dia}</td>`;
+                    calendarioHtml += `<td style="border: 1px solid black; padding: 5px; text-align: center; ${style}">${horasAula}</td>`;
                 } else {
                     calendarioHtml += `<td style="border: 1px solid black; padding: 5px; text-align: center;"></td>`;
                 }
@@ -154,7 +163,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Verificar se há substituições no dia específico
                 const foiSubstituidoNoDia = substituicoes.some(sub => sub.id_turma === turma.id && sub.id_professor_substituido == professorId && sub.data_mudanca === diaAula);
                 const estaSubstituindoNoDia = substituicoes.some(sub => sub.id_turma === turma.id && sub.id_professor_substituto == professorId && sub.data_mudanca === diaAula);
-
                 if (foiSubstituidoNoDia && !estaSubstituindoNoDia) {
                     continue;  // Ignora o dia em que o professor foi substituído
                 }
@@ -162,7 +170,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 let salarioFinal = salarioHora;
 
                 if (estaSubstituindoNoDia) {
-                    if(estaSubstituindoNoDia.is_aide){
+                    if(turma.nome === "TEACHER'S TRAINING"){
+                        salarioFinal = 30;
+                    }
+                    else if(estaSubstituindoNoDia.is_aide){
                         salarioFinal = 40;
                     } else if (turma.nome === "ENGLISH") {
                         salarioFinal = 60;
@@ -201,6 +212,7 @@ document.addEventListener('DOMContentLoaded', function () {
         for (let turma of uniqueArray) {
             let salarioPorTurma = 0;
             const diasDoMes = new Date(ano, mes + 1, 0).getDate();
+            const aulasExtrasTurma = aulasExtrasPorTurma[turma.id] || [];
         
             for (let dia = 1; dia <= diasDoMes; dia++) {
                 const dataAtual = new Date(ano, mes, dia);
@@ -217,7 +229,10 @@ document.addEventListener('DOMContentLoaded', function () {
         
                 // Aplicando a lógica adicional para calcular o salário final
                 if (estaSubstituindoNoDia) {
-                    if (estaSubstituindoNoDia.is_aide) {
+                    if(turma.nome === "TEACHER'S TRAINING"){
+                        salarioHora = 30;
+                    }
+                    else if (estaSubstituindoNoDia.is_aide) {
                         salarioHora = 40;
                     } else if (turma.nome === "ENGLISH") {
                         salarioHora = 60;
@@ -227,13 +242,23 @@ document.addEventListener('DOMContentLoaded', function () {
                         salarioHora = 60;
                     }
                 }
+
+                const aulasExtrasDia = aulasExtrasTurma.filter(aulaExtra => aulaExtra.dia_aula === diaAula);
+
+                let horasAula = turma.horas_por_dia;
+
+                if (aulasExtrasDia.length > 0) {
+                    aulasExtrasDia.forEach(aulaExtra => {
+                        horasAula += aulaExtra.horas_extra;
+                    });
+                }
         
                 diasTrabalhados.add(dia);
-                salarioPorTurma += turma.horas_por_dia * salarioHora;
-                salarioTotal += turma.horas_por_dia * salarioHora;
+                salarioPorTurma += horasAula * salarioHora;
+                salarioTotal += horasAula * salarioHora;
             }
         
-            salarioDetalhado += `Turma ${turma.nome} (Substituição): R$ ${salarioPorTurma}<br>`;
+            salarioDetalhado += `Turma ${turma.nome}: R$ ${salarioPorTurma}<br>`;
         }
         
 
@@ -323,8 +348,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const { salarioTotal: salarioAtual, salarioDetalhado: detalhesSalarioAtual } = await calcularSalario(turmas, turmasSubstituicaoMesAtual, mesAtual, anoAtual, aulasExtrasPorTurma, substituicoes);
         const { salarioTotal: salarioAnterior, salarioDetalhado: detalhesSalarioAnterior } = await calcularSalario(turmas, turmasSubstituicaoMesAnterior, mesAnterior, anoAnterior, aulasExtrasPorTurma, substituicoes);
 
-        salarioMesAtual.innerHTML = `<h3>Salário Mês Atual</h3><p>${detalhesSalarioAtual}</p><p><strong>Total: R$ ${salarioAtual}</strong></p>`;
-        salarioMesAnterior.innerHTML = `<h3>Salário Mês Anterior</h3><p>${detalhesSalarioAnterior}</p><p><strong>Total: R$ ${salarioAnterior}</strong></p>`;
+        salarioMesAtual.innerHTML = `<h3>Valores</h3><p>${detalhesSalarioAtual}</p><p><strong>Total: R$ ${salarioAtual}</strong></p>`;
+        salarioMesAnterior.innerHTML = `<h3>Valores</h3><p>${detalhesSalarioAnterior}</p><p><strong>Total: R$ ${salarioAnterior}</strong></p>`;
     })
     .catch(error => {
         console.error('Erro ao carregar as turmas do professor:', error);
