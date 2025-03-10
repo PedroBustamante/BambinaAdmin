@@ -82,7 +82,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Função para carregar alunos com base no filtro de experimentais, ex-alunos, paginação e filtro
     async function carregarAlunos(page = 1) {
-        console.log("entrou aqui");
         mostrarSpinner();
         const offset = (page - 1) * limit;
         const filter = alunoFiltro.value.trim().toLowerCase();
@@ -251,13 +250,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Filtrar e exibir resultados
     function filtrarResultados() {
-        console.log("filtro");
         const alunoFiltroValue = alunoFiltro.value.toLowerCase();
         const professorFiltroValue = professorFiltro.value.toLowerCase();
         const turmaFiltroValue = turmaFiltro.value;
 
         let resultados = [];
-        console.log({alunos});
 
         if (filtroAlunos.style.display === 'block') {
             alunos.forEach(aluno => {
