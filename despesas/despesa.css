@@ -113,7 +113,7 @@ th {
 
 .modal-content {
     background-color: #fff;
-    margin: 15% auto;
+    margin: 10vh auto; /* 10% da altura da tela para cima e para baixo */
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
@@ -122,6 +122,8 @@ th {
     display: flex;
     flex-direction: column;
     gap: 15px; /* Espaçamento entre os campos */
+    overflow-y: auto; /* Adiciona rolagem se o conteúdo exceder a altura */
+    max-height: 70vh; /* 70% da altura da tela */
 }
 
 .close-button {
